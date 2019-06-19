@@ -1,10 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-//MODULOS AGREGADOS
+//AGREGADOS
 import { FormsModule } from '@angular/forms';
 import {DataTableModule} from 'angular-6-datatable';
 import {HttpClientModule} from '@angular/common/http';
-//MODULOS AGREGADOS
+
+import { LoginService } from './services/login.service';
+//AGREGADOS
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +18,8 @@ import { NosotrosComponent } from './components/nosotros/nosotros.component';
 import { EscribaniasComponent } from './components/escribanias/escribanias.component';
 import { NovedadesComponent } from './components/novedades/novedades.component';
 import { LoginComponent } from './components/login/login.component';
+import { UsuarioComponent } from './components/usuario/usuario.component';
+import { PagosComponent } from './components/pagos/pagos.component';
 
 @NgModule({
   declarations: [
@@ -27,15 +31,18 @@ import { LoginComponent } from './components/login/login.component';
     NosotrosComponent,
     EscribaniasComponent,
     NovedadesComponent,
-    LoginComponent
+    LoginComponent,
+    UsuarioComponent,
+    PagosComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     DataTableModule,  //agregado
     HttpClientModule  //agregado
   ],
-  providers: [],
+  providers: [LoginService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

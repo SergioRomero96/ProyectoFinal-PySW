@@ -6,6 +6,7 @@ import {EscribaniasComponent} from './components/escribanias/escribanias.compone
 import {ContactenosComponent} from './components/contactenos/contactenos.component';
 import {NosotrosComponent} from './components/nosotros/nosotros.component';
 import {NovedadesComponent} from './components/novedades/novedades.component';
+import {UsuarioComponent} from './components/usuario/usuario.component';
 
 const routes: Routes = [
   { path: 'inicio', component: InicioComponent},
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'novedades', component: NovedadesComponent },
   { path: 'login', component: LoginComponent },
+  { path:'usuario', component: UsuarioComponent},
   { path: '**', pathMatch:'full',redirectTo:'inicio' }
 ];
 
