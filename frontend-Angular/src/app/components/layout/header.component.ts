@@ -9,15 +9,17 @@ import { LoginService } from 'src/app/services/login.service';
 export class HeaderComponent implements OnInit {
 
   constructor(public loginService: LoginService) {
-    console.log("logueado: " + loginService.isLogueado);
-    console.log("logueado: " + loginService.isLogueado);
+    console.log("header LocalStorage: " + localStorage.length);
+    console.log("login: " + loginService);
+    console.log("is: " + loginService.isLogueado);
+    console.log("usuario: " + loginService.usuarioLogueado);
    }
 
   ngOnInit() {
   }
 
   logout() {
-    //localStorage.removeItem('currentUser');
+    localStorage.removeItem('usuarioSesion');
     this.loginService.logout();
   }
 

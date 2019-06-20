@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/inicio';
   }
 
   login() {
@@ -34,8 +34,7 @@ export class LoginComponent implements OnInit {
           console.log(user);
           if (user.userName != '') {
             //vbles para mostrar-ocultar cosas en el header
-            this.loginService.isLogueado = true;
-            this.loginService.usuarioLogueado = user;
+            
             //localstorage usado para mostrar o no un componente
             localStorage.setItem('usuarioSesion', JSON.stringify(user));
             console.log("localstore: " + localStorage.length);

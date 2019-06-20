@@ -4,8 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {DataTableModule} from 'angular-6-datatable';
 import {HttpClientModule} from '@angular/common/http';
-
-import { LoginService } from './services/login.service';
+import {AngularFontAwesomeModule} from 'angular-font-awesome';
 //AGREGADOS
 
 import { AppRoutingModule } from './app-routing.module';
@@ -21,6 +20,8 @@ import { LoginComponent } from './components/login/login.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
 import { PagosComponent } from './components/pagos/pagos.component';
 
+import { LoginService } from './services/login.service';
+import {Constantes} from './models/constantes/constantes';
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,9 +41,11 @@ import { PagosComponent } from './components/pagos/pagos.component';
     AppRoutingModule,
     FormsModule,
     DataTableModule,  //agregado
-    HttpClientModule  //agregado
+    HttpClientModule,  //agregado
+    AngularFontAwesomeModule
+
   ],
-  providers: [LoginService],
+  providers: [LoginService, Constantes],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

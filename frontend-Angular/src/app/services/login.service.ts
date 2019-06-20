@@ -10,10 +10,19 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class LoginService {
-  isLogueado: boolean = false;
+  isLogueado: boolean;
   usuarioLogueado: Usuario;
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient) {
+    this.getUsuarioSesion();
+  }
+
+  getUsuarioSesion(){
+    if(localStorage.length != 0){
+      this.isLogueado = true;
+      this.usuarioLogueado = JSON.parse(localStorage.getItem('usuarioSesion'));
+    }
+  }
 
   public login(userName: string, password: string): Observable<any> {
     const httpOption = {
