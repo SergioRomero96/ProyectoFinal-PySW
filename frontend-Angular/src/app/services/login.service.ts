@@ -10,8 +10,8 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class LoginService {
-  isLogueado: boolean;
-  usuarioLogueado: Usuario;
+  isLogueado: boolean = false;
+  usuarioLogueado: Usuario = new Usuario();
 
   constructor(private _http: HttpClient) {
     this.getUsuarioSesion();

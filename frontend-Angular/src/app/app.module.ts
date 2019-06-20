@@ -22,6 +22,7 @@ import { PagosComponent } from './components/pagos/pagos.component';
 
 import { LoginService } from './services/login.service';
 import {Constantes} from './models/constantes/constantes';
+import { EscribanosComponent } from './components/escribanos/escribanos.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +35,8 @@ import {Constantes} from './models/constantes/constantes';
     NovedadesComponent,
     LoginComponent,
     UsuarioComponent,
-    PagosComponent
+    PagosComponent,
+    EscribanosComponent
   ],
   imports: [
     BrowserModule,

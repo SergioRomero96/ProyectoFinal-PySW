@@ -3,49 +3,49 @@ import { Injectable } from '@angular/core';
 // Importamos los componentes que vamos a usar
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Usuario } from '../models/usuario';
+import { Escribania } from '../models/escribania';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioService {
+export class EscribaniaService {
 
   constructor(private _http: HttpClient) { }
 
-  public getUsuarios(): Observable<any> {
+  public getEscribanias(): Observable<any> {
     const httpOption = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
-    return this._http.get("http://localhost/colegioEscribanos/public/index.php/usuario/", httpOption);
+    return this._http.get("http://localhost/colegioEscribanos/public/index.php/escribania/", httpOption);
   }
 
-  public addUsuario(usuario: Usuario) {
+  public addEscribania(escribania: Escribania) {
     const httpOption = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     }
-    let body = JSON.stringify(usuario);
+    let body = JSON.stringify(escribania);
     console.log("body: " + body);
-    return this._http.post('http://localhost/colegioEscribanos/public/index.php/usuario/new', body, httpOption);
+    return this._http.post('http://localhost/colegioEscribanos/public/index.php/escribania/new', body, httpOption);
   }
 
-  public deleteUsuario(id: number) {
+  public deleteEscribania(id: number) {
     //utilizo el metodo delete de http que es el configurado en el deleteAction de Symfony
-    return this._http.delete(('http://localhost/colegioEscribanos/public/index.php/usuario/' + id));
+    return this._http.delete(('http://localhost/colegioEscribanos/public/index.php/escribania/' + id));
   }
 
-  public updateUsuario(usuario: Usuario) {
+  public updateEscribania(escribania: Escribania) {
     const httpOption = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
-    let body = JSON.stringify(usuario);
+    let body = JSON.stringify(escribania);
     //envio en el body el mensaje transformado en un JSON
-    return this._http.post('http://localhost/colegioEscribanos/public/index.php/usuario/' + usuario.id + '/edit',
+    return this._http.post('http://localhost/colegioEscribanos/public/index.php/escribania/' + escribania.id + '/edit',
       body, httpOption);
   }
 }

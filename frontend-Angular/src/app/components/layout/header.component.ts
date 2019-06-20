@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
+import { Constantes } from 'src/app/models/constantes/constantes';
 
 @Component({
   selector: 'app-header',
@@ -8,7 +9,7 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(public loginService: LoginService) {
+  constructor(public loginService: LoginService, public perfil:Constantes) {
     console.log("header LocalStorage: " + localStorage.length);
     console.log("login: " + loginService);
     console.log("is: " + loginService.isLogueado);
