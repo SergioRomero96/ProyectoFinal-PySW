@@ -20,6 +20,10 @@ import { LoginComponent } from './components/login/login.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
 import { PagosComponent } from './components/pagos/pagos.component';
 
+//googleMpas
+import {AgmCoreModule} from '@agm/core';
+
+
 import { LoginService } from './services/login.service';
 import {Constantes} from './models/constantes/constantes';
 import { EscribanosComponent } from './components/escribanos/escribanos.component';
@@ -44,7 +48,15 @@ import { EscribanosComponent } from './components/escribanos/escribanos.componen
     FormsModule,
     DataTableModule,  //agregado
     HttpClientModule,  //agregado
-    AngularFontAwesomeModule
+    AngularFontAwesomeModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyB9yypPH_KA0vLAh3qm7kZOhaRz9BO46iY'
+    })
+   // AgmCoreModule.forRoot({
+
+      //apiKey:'AIzaSyAz6wxbUFHLDcHNPCVIUj8YysXhAA1jdQ4'
+    //  apiKey:'AIzaSyB9yypPH_KA0vLAh3qm7kZOhaRz9BO46iY'
+    //})
 
   ],
   providers: [LoginService, Constantes],

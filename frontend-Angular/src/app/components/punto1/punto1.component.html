@@ -1,0 +1,180 @@
+<div class="col-lg-10 mx-auto">
+
+  <div class="card bg-info" >
+    <h5 class="card-header text-center bg-primary">Envia tu Mensaje</h5>
+    <div class="card-body">
+      <form data-toggle="validator" (ngSubmit)="mostrar(formIngreso)" #formIngreso="ngForm">
+
+        <div class="row form-group">
+          <label for="txtDe" class="col-sm-3 col-md-2">De :</label>
+          <input class="form-control col-sm-9 col-md-5" type="number" name="txtDe" placeholder="Telefono De"
+            [(ngModel)]="mensaje.desde" required #txtDe="ngModel" />
+         <!-- <div *ngIf="txtDe.invalid && (txtDe.dirty || txtDe.touched)" class="alert alert-danger">
+            <div *ngIf="txtDe.error.required">Campo Requerido</div>
+          </div>-->
+        </div>
+        <div class="row form-group">
+          <label for="txtPara" class="col-sm-3 col-md-2">Para :</label>
+          <input class="form-control col-sm-9 col-md-5" type="number" name="txtPara" placeholder="Telofono Para"
+            [(ngModel)]="mensaje.para" required #txtPara="ngModel">
+          <!--<div *ngIf="txtPara.invalid && (txtPara.dirty || txtPara.touched)" class="alert alert-danger">
+            <div *ngIf="txtPara.error.required">Campo Requerido</div>
+          </div>-->
+        </div>
+        <div class="row form-group">
+          <label for="txtEmpresa" class="col-sm-3 col-md-2">Empresa Destino:</label>
+          <select [(ngModel)]="mensaje.empresa" name="empresa" class="form-control col-sm-9 col-md-5">
+            <option *ngFor="let empresa of empresas" [ngValue]="empresa">{{empresa.nombre}}</option>
+          </select>
+
+        </div>
+        <div class="row form-group">
+          <label class=" col-4 col-sm-8 col-md-4"> Tu mesaje</label>
+          <label class="col-8 col-sm-4 col-md-4"> {{tamTexto}} Caracteres restantes </label>
+        </div>
+        <div class="row form-group">
+          <div class="col-md-9">
+            <textarea class="form-control" [maxlength]="tamTexto" rows="5" name="txtTexto" [(ngModel)]="mensaje.texto"
+              (ngModelChange)="cambiarTamTexto()" required #txtTexto="ngModel"> </textarea>
+            <!--<div *ngIf="txtTexto.invalid && (txtTexto.dirty || txtTexto.touched)" class="alert alert-danger">
+            <div *ngIf="txtTexto.error.required">Campo Requerido</div>-->
+          </div>
+
+        </div>
+
+        <div class="row form-group">
+          <button type="button" class="btn btn btn-outline-light" [disabled]="formIngreso.invalid"
+            (click)="enviarMensaje()" >Enviar</button>
+          <button type="button" class="btn btn btn-outline-light" (click)="borrarCampo()">Limpiar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <br>
+  <div class="dropdown-divider  "></div>
+  <br>
+
+  <div class=" card mb-lg-1 mr-sm-4 ml-sm4 text-center table-responsive-sm bg-info " role="document">
+    <div class="card-content bg-info">
+      <div class="card-header bg-primary">
+        <h5 class="card-title text-center text-light">Listado de Mensaje</h5>
+      </div>
+      <div class="crad-body">
+        <div id="tabMensaje" class="table-responsive-sm pr-sm-2 pl-sm-2">
+          <table class="table table-bordered table-hover mt-4" [mfData]="mensajes" #mf="mfDataTable" [mfRowsOnPage]="10">
+            <thead>
+              <tr>
+                <th style="width: 5%">
+                  <mfDefaultSorter by="id">Id</mfDefaultSorter>
+                </th>
+                <th style="width: 15%">
+                  <mfDefaultSorter by="desde">Desde</mfDefaultSorter>
+                </th>
+                <th style="width: 15%">
+                  <mfDefaultSorter by="Para">Para</mfDefaultSorter>
+                </th>
+                <th style="width: 30%">
+                  <mfDefaultSorter by="texto">Texto</mfDefaultSorter>
+                </th>
+                <th style="width: 15%">
+                  <mfDefaultSorter by="fecha">Fecha</mfDefaultSorter>
+                </th>
+                <th style="width: 15%">
+                  <mfDefaultSorter by="empresa.nombre">Empresa</mfDefaultSorter>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mf.data">
+                <td>{{item.id}}</td>
+                <td>{{item.desde}}</td>
+                <td>{{item.para}}</td>
+                <td>{{item.texto}}</td>
+                <td>{{item.fecha.timestamp * 1000 | date: 'dd/MM/yyyy'}}</td>
+                <td>{{item.empresa.nombre | uppercase}}</td>
+              </tr>
+            </tbody>
+           <!-- <tfoot>
+              <tr>
+                <td colspan="6">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>-->
+          </table>
+        </div>
+        <div class="row form-group pr-sm-4 pl-sm-4">
+          <button type="button" class="btn btn btn-outline-light" 
+            (click)="reporteTablaPdf()" >Imprimir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!--
+<div class="table-responsive pr-sm-2 pl-sm-2">
+  <table class="table table-bordered table-hover mt-2" [mfData]="equipos | filter:filterTeam" #mf="mfDataTable"
+    [mfRowsOnPage]="5">
+    <thead class="thead-dark">
+      <tr>
+        <th style="width: 10%">
+          <mfDefaultSorter by="id">Id</mfDefaultSorter>
+        </th>
+        <th style="width: 50%">
+          <mfDefaultSorter by="name">Nombre</mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+          <mfDefaultSorter by="city">Ciudad</mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+          <mfDefaultSorter by="division">Division</mfDefaultSorter>
+        </th>
+        <th>
+          Jugadores
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of mf.data ">
+        <td>{{item.id}}</td>
+        <td>{{item.name | uppercase}}</td>
+        <td>{{item.city}}</td>
+        <td>{{item.division}}</td>
+        <td>
+           Button trigger modal -
+          <button type="submit" class="btn btn-outline-light" (click)=" cargarJugador(item.id)">Ver</button>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5">
+          <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+</div>-->
+<!--
+<div class="modal" id="presModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Mensaje enviado</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <label class="col-sm-12"> Para: {{mensaje.para}}</label>
+        <label class="col-sm-12"> De: {{mensaje.desde}}</label>
+        <label class="col-12"> Mensaje : {{mensaje.texto}}</label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+ 
+</div>-->

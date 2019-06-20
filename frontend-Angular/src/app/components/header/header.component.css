@@ -1,12 +1,13 @@
 header{
-    background-color: #343a40;
+   
     padding-top: 20px;   
     margin-bottom: 20px;
+    background: linear-gradient(to bottom, rgb(22, 109, 109), white)
 }
 
 .rowCabecera{
     padding-left: 10px;
-    margin-right: auto;
+    padding-right: 10px;
     padding-bottom: 30px;
 }
 
@@ -25,8 +26,8 @@ header{
     text-decoration: none;
 }
 
-.resaltado{
-    color: dodgerblue;
+.titulo{
+    color: rgb(247, 100, 95);
 }
 
 header h2{

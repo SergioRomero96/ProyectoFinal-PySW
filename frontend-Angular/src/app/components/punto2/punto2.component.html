@@ -1,0 +1,158 @@
+<div class="row" [hidden]="submitted ">
+  <div class="col-2"></div>
+  <form class="col-6 mx-auto" (ngSubmit)="mostrar(ingresoFrom)" #ingresoFrom="ngForm">
+    <div class="card row bg-info">
+      <h5 class="card-header text-center bg-primary">CASA DE CAMBIO</h5>
+      <div class="card-body">
+        <div class="row form-group">
+          <label for="txtComp" class="col-sm-3 col-form-label">Dolar para la Compra: </label>
+          <div class="col-sm-9">
+            <input type="number" class="form-control" placeholder="Ingrese Cambio" name="txtComp"
+              [(ngModel)]="dolar.compraDolar" required #txtComp="ngModel">
+          </div>
+          <div *ngIf="txtComp.invalid && (txtComp.dirty || txtComp.touched)" class="alert alert-danger">
+            <div *ngIf="txtComp.error.required">Campo Requerido</div>
+          </div>
+        </div>
+        <div class="row form-group">
+          <label for="txtVent" class="col-sm-3 col-form-label">Dolar para la Venta: </label>
+          <div class="col-sm-9">
+            <input type="number" class="form-control" placeholder="Ingrese Venta" name="txtVenta"
+              [(ngModel)]="dolar.ventaDolar" required #txtVenta="ngModel">
+          </div>
+          <div *ngIf="txtVenta.invalid && (txtVenta.dirty || txtVenta.touched)" class="alert alert-danger">
+            <div *ngIf="txtVenta.error.required">Campo Requerido</div>
+          </div>
+        </div>
+        <br>
+        <button type="submit" class="btn btn btn-outline-light" [disabled]="!ingresoFrom.form.valid">GUARDAR</button>
+      </div>
+    </div>
+  </form>
+  <div class="col-2"></div>
+</div>
+
+<div class="row " [hidden]="!submitted ">
+  <div class="col-2"></div>
+  <form class="col-8" (ngSubmit)="mostrar(formIngreso)" #formIngreso="ngForm">
+    <div class="card bg-info">
+      <h5 class="card-header text-center bg-primary">CASA DE CAMBIO</h5>
+      <div class="card-body">
+
+        <div class="form-group row">
+          <label for="txtCantidad" class="col-sm-3 col-form-label">Ingrese la Cantidad: </label>
+          <div class="col-sm-9">
+            <input type="number" class="form-control" placeholder="Ingrese Cantidad" name="txtCantidad"
+              [(ngModel)]="cambio.cantidad" required #txtCantidad="ngModel">
+          </div>
+          <div *ngIf="txtCantidad.invalid && (txtCantidad.dirty || txtCantidad.touched)" class="alert alert-danger">
+            <div *ngIf="txtCantidad.error.required">Campo Requerido</div>
+          </div>
+        </div>
+        <div class=" row  d-flex justify-content-between align-items-center">
+          <div class=" card-body form-group col-sm-9 ">
+            <fieldset class="border border-light">
+              <legend>TIPO DE CAMBIO</legend>
+              <label><input name="cbipesos" type="checkbox" checked="checked" [(ngModel)]="cambio.dolar"
+                  [ngModelOptions]="{standalone: true}">Pesos a Dolar</label>
+              <Br>
+              <Br>
+              <label><input name="cbidolares" type="checkbox" checked="checked" [(ngModel)]="cambio.peso"
+                  [ngModelOptions]="{standalone: true}">Dolar a Pesos</label>
+              <Br>
+            </fieldset>
+          </div>
+
+          <div class="form-group col-sm-3">
+            <div>
+              <button type="button" class="btn btn btn-outline-light"
+                (click)="cambiar(); registrarCambio(); actualizar()">
+                Aceptar
+              </button>
+            </div>
+            <div>
+              <button type="button" class="btn btn btn-outline-light" (click)="nuevo()">
+                Nuevo
+              </button>
+            </div>
+            <div>
+              <button type="button" class="btn btn btn-outline-light" [disabled]="ingresoFrom.invalid"
+                (click)="reiniciar()">
+                Reiniciar
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- <div class="form-group ">
+          <label class="col-sm-6"> {{moneda}}</label>
+        <label class="col-sm-5 col-form-label bg-light">{{precio}}</label>
+
+        </div>-->
+        <div>
+          <button type="button" class="btn btn btn-outline-light" data-toggle="modal" data-target="#exampleModal">
+            Mostrar Cambio
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <div class="dropdown-divider "></div>
+    <br>
+    <div class="row">
+      <div class=" card mb-lg-1 mr-sm-4 ml-sm4 text-center table-responsive-sm bg-info">
+        <h5 class="card-header bg-primary">LISTADO DE CAMBIO</h5>
+        <div class="card-body">
+          <form>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Dinero Ingresado</th>
+                  <th>Tipo Cambio</th>
+                  <th>Dinero Entregado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of cambios">
+                  <th scope="row"> {{item.cantidad}} </th>
+                  <td> {{item.valor}} </td>
+                  <td> {{item.precio}} </td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- Ventana Emergente -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Cantidad de transacciones en
+            del dia</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <label>Dolar: {{valorDolar}}</label>
+          </div>
+          <div class="form-row">
+            <label>Pesos: {{valorPesos}}</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
