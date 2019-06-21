@@ -80,7 +80,7 @@ class UsuarioController extends AbstractController
         $usuario->setUserName($data['userName']);
         $usuario->setPassword($data['password']);
         $usuario->setPerfil($data['perfil']);
-
+        //$usuario->setFoto($data['foto']);
         $em = $this->getDoctrine()->getManager();
 
         $em->persist($usuario);
@@ -88,19 +88,6 @@ class UsuarioController extends AbstractController
 
         $result['status'] = 'ok';
         return new Response(json_encode($result), 200);
-    }
-
-    public function agregar($data)
-    {
-        $usuario = new Usuario();
-        $usuario->setUserName($data['userName']);
-        $usuario->setPassword($data['password']);
-        $usuario->setPerfil($data['perfil']);
-
-        $em = $this->getDoctrine()->getManager();
-
-        $em->persist($usuario);
-        $em->flush();
     }
 
     /**
@@ -124,7 +111,7 @@ class UsuarioController extends AbstractController
         $usuario->setUserName($data['userName']);
         $usuario->setPassword($data['password']);
         $usuario->setPerfil($data['perfil']);
-
+        $usuario->setFoto($data['foto']);
         //guardo en la BD la entidad usuario modificada.
         $em->persist($usuario);
         $em->flush();

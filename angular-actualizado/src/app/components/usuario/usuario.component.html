@@ -45,7 +45,7 @@
                 <td>{{item.id}}</td>
                 <td>{{item.userName}}</td>
                 <td>{{item.perfil}}</td>
-                <td>{{item.foto}}</td>
+                <td><img style="width: 100px; height: 100px" src="{{item.foto}}"></td>
                 <td>
                   <!-- Button trigger modal -->
                   <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#exampleModal"
@@ -124,9 +124,8 @@
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">foto Perfil:</label>
                     <div class="col-sm-9">
-                      <input type="file" alife-file-to-base64 multiple (onFileChanged)="onFileChanges($event)"
-                        [(fileModel)]="files" [(rawFileModel)]="rawFiles" />
-
+                      <input type="file" alife-file-to-base64  (onFileChanged)="onFileChanges($event)" />
+                      <img style="width: 100px; height: 100px" src="{{usuario.foto}}">
                     </div>
                   </div>
                 </form>

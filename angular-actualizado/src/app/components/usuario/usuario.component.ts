@@ -21,7 +21,7 @@ export class UsuarioComponent implements OnInit {
   usuarios: Array<Usuario>;
   titulo: string;
   isUpdate: boolean = false;
-
+  foto: string;
 
   perfiles = [this.constantes.ADMINISTRADOR, this.constantes.ADMINISTRATIVO, this.constantes.GERENTE];
 
@@ -33,7 +33,12 @@ export class UsuarioComponent implements OnInit {
   ngOnInit() {
   }
 
-  cambiarTituloAgregar(form:FormGroup) {
+  onFileChanges(files) {
+    console.log("file change by method: ", files);
+    this.usuario.foto = files[0].base64;
+  }
+
+  cambiarTituloAgregar(form: FormGroup) {
     this.limpiar(form);
     this.isUpdate = false;
     this.titulo = "Agregar Usuario";

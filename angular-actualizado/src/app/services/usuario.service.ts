@@ -45,6 +45,7 @@ export class UsuarioService {
     };
     let body = JSON.stringify(usuario);
     //envio en el body el mensaje transformado en un JSON
+    console.log("body usuario: " + body);
     return this._http.post('http://localhost/colegioEscribanos/public/index.php/usuario/' + usuario.id + '/edit',
       body, httpOption);
   }
