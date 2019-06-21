@@ -19,9 +19,7 @@ declare var $: any;
 export class EscribanosComponent implements OnInit {
   escribanias: Array<Escribania>;
   escribanos: Array<Escribano>;
-  usuarios: Array<Usuario>;
   escribano: Escribano;
-  agrego: boolean = false;
 
   isUpdate: boolean = false;
   titulo: string;
@@ -39,7 +37,6 @@ export class EscribanosComponent implements OnInit {
   }
 
   public limpiar(form: FormGroup) {
-    this.agrego = false;
     this.escribano = new Escribano();
     form.reset();
   }
@@ -87,7 +84,6 @@ export class EscribanosComponent implements OnInit {
           console.log("USUARIO Error en el envio.");
         }
       );
-    console.log("2agrego: " + this.agrego);
   }
 
 

@@ -22,17 +22,6 @@ export class EscribanoService {
     return this._http.get("http://localhost/colegioEscribanos/public/index.php/escribano/", httpOption);
   }
 
-  public addUsuario(usuario: Usuario) {
-    const httpOption = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    }
-    let body = JSON.stringify(usuario);
-    console.log("body usuario: " + body);
-    return this._http.post('http://localhost/colegioEscribanos/public/index.php/usuario/new', body, httpOption);
-  }
-
   public addEscribano(escribano: Escribano) {
     const httpOption = {
       headers: new HttpHeaders({
