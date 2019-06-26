@@ -1,9 +1,12 @@
+import { MapaService } from './../../services/mapa.service';
 import { Component, OnInit } from '@angular/core';
 import { Escribania } from 'src/app/models/escribania';
 import { EscribaniaService } from 'src/app/services/escribania.service';
 import { Constantes } from 'src/app/models/constantes/constantes';
 import { FormGroup } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
+import { Results } from 'src/app/models/results';
+import { Geometry } from 'src/app/models/geometry';
 
 declare var jQuery: any;
 declare var $: any;
@@ -16,12 +19,16 @@ declare var $: any;
 export class EscribaniasComponent implements OnInit {
   escribania: Escribania;
   escribanias: Array<Escribania>;
-
+  lista: Array<Results>;
+  results: Results;
+  geo: Geometry;
+  lat: number = 0;
+  lng: number = 0;
   isUpdate: boolean = false;
   titulo: string;
   filterEscribania = '';
 
-  constructor(public loginService:LoginService, private escribaniaService: EscribaniaService, public perfil: Constantes) {
+  constructor(public loginService:LoginService, private escribaniaService: EscribaniaService, public perfil: Constantes, private service: MapaService) {
     this.escribania = new Escribania();
     this.escribanias = new Array<Escribania>();
     this.obtenerEscribanias();
@@ -113,5 +120,29 @@ export class EscribaniasComponent implements OnInit {
     this.escribania = new Escribania();
     form.reset();
   }
+
+
+
+  verLonguitudLatitud(escribania: Escribania){
+    console.log("la escribania es: " + escribania.nombre)
+    this.escribania = Object.assign(this.escribania, escribania);
+    this.service.getLatLng(this.escribania.direccion, this.escribania.localidad)
+    .subscribe(
+      (data) => {
+        this.lista = data["results"]
+        this.asignarValor();
+      }
+
+      )
+
+
+  }
+  asignarValor(){
+
+    this.lat = this.lista[0].geometry.lat;
+    this.lng = this.lista[0].geometry.lng;
+    console.log("valores de lat y lng: " +this.lat +", " + this.lng);
+  }
+
 
 }

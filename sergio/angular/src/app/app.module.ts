@@ -1,3 +1,4 @@
+import { MapaComponent } from './components/mapa/mapa.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 //AGREGADOS
@@ -33,6 +34,8 @@ import { AlifeFileToBase64Module } from 'alife-file-to-base64';
 import { NovedadEscribanoComponent } from './components/novedad-escribano/novedad-escribano.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { AsideComponent } from './components/layout/aside/aside.component';
+import { AgmCoreModule } from '@agm/core';
+
 
 @NgModule({
   declarations: [
@@ -50,7 +53,8 @@ import { AsideComponent } from './components/layout/aside/aside.component';
     EscribanosComponent,
     NovedadEscribanoComponent,
     FilterPipe,
-    AsideComponent
+    AsideComponent,
+    MapaComponent
   ],
   imports: [
     BrowserModule,
@@ -61,9 +65,12 @@ import { AsideComponent } from './components/layout/aside/aside.component';
     AngularFontAwesomeModule,
     NgxPaginationModule,
     AlifeFileToBase64Module,
-    
+
     BrowserAnimationsModule, // required animations module
-    ToastrModule.forRoot() // ToastrModule added
+    ToastrModule.forRoot(),// ToastrModule added
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAz6wxbUFHLDcHNPCVIUj8ysXhAA1j-dQ4'
+    }),
   ],
   providers: [LoginService, Constantes],
   bootstrap: [AppComponent]
