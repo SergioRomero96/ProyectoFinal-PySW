@@ -1,0 +1,295 @@
+<div *ngIf="loginService.isLogueado">
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h4> Gestion de Escribanos</h4>
+      </div>
+      <div class="card-body">
+
+
+        <h4 class="text-center">Lista de escribanos</h4>
+        <hr>
+        <div class="form-group row">
+          <div class="col-sm-6">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#escribanoModal"
+              (click)="cambiarTituloAgregar(frmEscribano)">
+              <i class="fa fa-plus"></i>Nuevo escribano
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover mt-2" [mfData]="escribanos" #mf="mfDataTable"
+            [mfRowsOnPage]="5">
+            <thead class="thead-dark">
+              <tr>
+                <th style="width: 10%">
+                  <mfDefaultSorter by="dni">DNI</mfDefaultSorter>
+                </th>
+                <th style="width: 20%">
+                  Apellido y Nombre
+                </th>
+                <!-- <th style="width: 10%">
+                  <mfDefaultSorter by="fechaNacimiento">Fecha Nacimiento</mfDefaultSorter>
+                </th>-->
+                <th style="width: 5%">
+                  <mfDefaultSorter by="matricula">Matricula</mfDefaultSorter>
+                </th>
+                <th style="width: 10%">
+                  <mfDefaultSorter by="cargo">Cargo</mfDefaultSorter>
+                </th>
+                <th style="width: 20%">
+                  Escribania
+                </th>
+                <th style="width: 10%">
+                  Usuario
+                </th>
+                <th style="width: 13%">
+                  <mfDefaultSorter by="estado">Estado</mfDefaultSorter>
+                </th>
+                <th style="width: 12%">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mf.data ">
+                <td>{{item.dni}}</td>
+                <td>{{item.apellido}}, {{item.nombre}}</td>
+                <!--<td>{{item.fechaNacimiento.timestamp * 1000 | date: 'dd/MM/yyyy'}}</td>-->
+                <td>{{item.matricula}}</td>
+                <td>{{item.cargo}}</td>
+                <td>{{item.escribania.nombre}}</td>
+                <td>{{item.usuario.userName}}</td>
+                <td>
+                  <span class="badge badge-info"> {{item.estado}}</span>
+                </td>
+                <td>
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-success mr-2 mb-md-0 mb-sm-1" data-toggle="modal" data-target="#escribanoModal"
+                    (click)="seleccionarEscribano(item)">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-danger" (click)="eliminarEscribano(item)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="8">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="escribanoModal" tabindex="-1" role="dialog" aria-labelledby="escribanoModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="escribanoModalLabel">{{titulo}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form #frmEscribano="ngForm">
+
+                  <div id="accordion">
+
+                    <div class="card">
+                      <div class="card-header">
+                        <a class="card-link" data-toggle="collapse" href="#collapseOne">
+                          Datos Personales
+                        </a>
+                      </div>
+                      <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                        <div class="card-body">
+
+                          <div class="form-group row">
+                            <label for="txtDni" class="col-sm-3 col-form-label">DNI:</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" name="txtDni" placeholder="Ingrese DNI" required
+                                [(ngModel)]="escribano.dni" #dni="ngModel">
+                              <div *ngIf="dni.invalid && (dni.dirty || dni.touched)" class="alert alert-danger">
+                                <div *ngIf="dni.errors.required">
+                                  DNI es requerido.
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="txtApellido" class="col-sm-3 col-form-label">Apellido:</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" name="txtApellido" placeholder="Ingrese Apellido"
+                                required [(ngModel)]="escribano.apellido" #apellido="ngModel">
+                              <div *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)"
+                                class="alert alert-danger">
+                                <div *ngIf="apellido.errors.required">
+                                  Apellido es requerido.
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="txtNombre" class="col-sm-3 col-form-label">Nombre:</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" name="txtNombre" placeholder="Ingrese nombre"
+                                required [(ngModel)]="escribano.nombre" #nombre="ngModel">
+                              <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
+                                class="alert alert-danger">
+                                <div *ngIf="nombre.errors.required">
+                                  Nombre es requerido.
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="txtFechaNac" class="col-sm-3 col-form-label">Fecha Nacimiento</label>
+                            <div class="col-sm-9">
+                              <input type="date" class="form-control" name="txtFechaNac"
+                                placeholder="Ingrese Fecha Nacimiento" [(ngModel)]="escribano.fechaNacimiento"
+                                [value]="escribano.fechaNacimiento"
+                                #fechaNac="ngModel">
+
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="txtDireccion" class="col-sm-3 col-form-label">Domicilio:</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" name="txtDireccion"
+                                placeholder="Ingrese Domicilio" [(ngModel)]="escribano.direccion" #direccion="ngModel">
+
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="card">
+                      <div class="card-header">
+                        <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+                          Datos del Escribano
+                        </a>
+                      </div>
+                      <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+
+                          <div class="form-group row">
+                            <label for="txtMatricula" class="col-sm-3 col-form-label">Matricula:</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" name="txtMatricula"
+                                placeholder="Ingrese Matricula" required [(ngModel)]="escribano.matricula"
+                                #matricula="ngModel">
+                              <div *ngIf="matricula.invalid && (matricula.dirty || matricula.touched)"
+                                class="alert alert-danger">
+                                <div *ngIf="matricula.errors.required">
+                                  Matricula es requerido.
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="cmbCargo" class="col-sm-3 col-form-label">Cargo:</label>
+                            <div class="col-sm-9">
+                              <select class="form-control" name="cmbCargo" required [(ngModel)]="escribano.cargo"
+                                #cargo="ngModel">
+                                <option *ngFor="let cargo of cargos" [value]="cargo">{{cargo}}</option>
+                              </select>
+                              <div [hidden]="cargo.valid || cargo.untouched" class="alert alert-danger">
+                                Cargo es requerido.
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="cmbEscribania" class="col-sm-3 col-form-label">Escribania:</label>
+                            <div class="col-sm-9">
+                              <select class="form-control" name="cmbEscribania" required
+                                [(ngModel)]="escribano.escribania" #es="ngModel">
+                                <option *ngFor="let escribania of escribanias" [ngValue]="escribania">
+                                  {{escribania.nombre}}</option>
+                              </select>
+                              <div [hidden]="es.valid || es.untouched" class="alert alert-danger">
+                                Escribania es requerido.
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header">
+                        <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+                          Datos del Usuario
+                        </a>
+                      </div>
+                      <div id="collapseThree" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+
+                          <div class="form-group row">
+                            <label for="txtUserName" class="col-sm-3 col-form-label">Nombre de Usuario:</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" name="txtUserName" placeholder="Ingrese userName"
+                                required [(ngModel)]="escribano.usuario.userName" #userName="ngModel">
+                              <div *ngIf="userName.invalid && (userName.dirty || userName.touched)"
+                                class="alert alert-danger">
+                                <div *ngIf="userName.errors.required">
+                                  Nombre de Usuario es requerido.
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="txtPassword" class="col-sm-3 col-form-label">Contraseña:</label>
+                            <div class="col-sm-9">
+                              <input type="password" class="form-control" placeholder="Ingrese password"
+                                name="txtPassword" required [(ngModel)]="escribano.usuario.password"
+                                #password="ngModel">
+                              <div *ngIf="password.invalid && (password.dirty || password.touched)"
+                                class="alert alert-danger">
+                                <div *ngIf="password.errors.required">
+                                  Contraseña es requerido.
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">foto Perfil:</label>
+                            <div class="col-sm-9">
+                              <input id="inputFoto" class="form-control-file" type="file" alife-file-to-base64 (onFileChanged)="onFileChanges($event)" />
+                              <img *ngIf="escribano.usuario.foto" style="width: 100px; height: 100px" src="{{escribano.usuario.foto}}">
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                  (click)="limpiar(frmEscribano)">Cancelar</button>
+                <button type="button" *ngIf="isUpdate" [disabled]="!frmEscribano.form.valid" class="btn btn-primary"
+                  (click)="modificarEscribano(frmEscribano)">Actualizar</button>
+                <button type="button" *ngIf="!isUpdate" [disabled]="!frmEscribano.form.valid" class="btn btn-primary"
+                  (click)="agregarEscribano(frmEscribano)">Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

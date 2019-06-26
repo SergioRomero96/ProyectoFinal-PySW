@@ -1,0 +1,35 @@
+header{
+    background-color: #343a40;
+    padding-top: 20px;   
+    margin-bottom: 20px;
+}
+
+.rowCabecera{
+    padding-left: 10px;
+    margin-right: auto;
+    padding-bottom: 30px;
+}
+
+.logo{
+    padding-bottom: 20px;
+}
+
+
+.logo a{
+    font-size: 45px;
+    color: white;
+}
+
+.logo a:hover{
+    color: white;
+    text-decoration: none;
+}
+
+.resaltado{
+    color: dodgerblue;
+}
+
+header h2{
+    color: grey;
+    font-size: 20px;
+}
