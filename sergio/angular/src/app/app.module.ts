@@ -23,11 +23,16 @@ import { LoginComponent } from './components/login/login.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
 import { PagosComponent } from './components/pagos/pagos.component';
 
+//paginacion
+import {NgxPaginationModule} from 'ngx-pagination';
+
 import { LoginService } from './services/login.service';
 import {Constantes} from './models/constantes/constantes';
 import { EscribanosComponent } from './components/escribanos/escribanos.component';
 import { AlifeFileToBase64Module } from 'alife-file-to-base64';
 import { NovedadEscribanoComponent } from './components/novedad-escribano/novedad-escribano.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { AsideComponent } from './components/layout/aside/aside.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +48,9 @@ import { NovedadEscribanoComponent } from './components/novedad-escribano/noveda
     UsuarioComponent,
     PagosComponent,
     EscribanosComponent,
-    NovedadEscribanoComponent
+    NovedadEscribanoComponent,
+    FilterPipe,
+    AsideComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +59,7 @@ import { NovedadEscribanoComponent } from './components/novedad-escribano/noveda
     DataTableModule,  //agregado
     HttpClientModule,  //agregado
     AngularFontAwesomeModule,
+    NgxPaginationModule,
     AlifeFileToBase64Module,
     
     BrowserAnimationsModule, // required animations module

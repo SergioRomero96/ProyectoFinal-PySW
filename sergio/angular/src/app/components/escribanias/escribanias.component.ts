@@ -19,9 +19,11 @@ export class EscribaniasComponent implements OnInit {
 
   isUpdate: boolean = false;
   titulo: string;
+  filterEscribania = '';
 
   constructor(public loginService:LoginService, private escribaniaService: EscribaniaService, public perfil: Constantes) {
     this.escribania = new Escribania();
+    this.escribanias = new Array<Escribania>();
     this.obtenerEscribanias();
   }
 

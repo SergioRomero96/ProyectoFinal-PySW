@@ -1,0 +1,27 @@
+.card-columns {
+    @include media-breakpoint-only(lg) {
+      column-count: 4;
+    }
+    @include media-breakpoint-only(xl) {
+      column-count: 5;
+    }
+   
+  }
+
+  div#contenedor {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+   
+  div#contenedor section {
+    float: left;
+    width: 70%;
+  }
+   
+  div#contenedor aside {
+    float: left;
+    width: 25%;
+    margin-left: 5%;
+  }
