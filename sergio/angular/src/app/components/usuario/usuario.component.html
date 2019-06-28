@@ -124,7 +124,7 @@
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">foto Perfil:</label>
                     <div class="col-sm-9">
-                      <input type="file"  class="form-control-file" alife-file-to-base64  (onFileChanged)="onFileChanges($event)" />
+                      <input id="inputFoto" type="file"  class="form-control-file" alife-file-to-base64  (onFileChanged)="onFileChanges($event)" />
                       <img *ngIf="usuario.foto" style="width: 100px; height: 100px" src="{{usuario.foto}}">
                     </div>
                   </div>

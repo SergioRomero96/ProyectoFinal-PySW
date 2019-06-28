@@ -4,6 +4,7 @@ import { Usuario } from 'src/app/models/usuario';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Constantes } from './../../models/constantes/constantes';
 import { FormGroup } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 //import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
 
 
@@ -25,7 +26,8 @@ export class UsuarioComponent implements OnInit {
 
   perfiles = [this.constantes.ADMINISTRADOR, this.constantes.ADMINISTRATIVO, this.constantes.GERENTE];
 
-  constructor(private usuarioService: UsuarioService, public loginService: LoginService, public constantes: Constantes) {
+  constructor(private usuarioService: UsuarioService, public loginService: LoginService, 
+    public constantes: Constantes, private toastr: ToastrService) {
     this.usuario = new Usuario();
     this.obtenerUsuarios();
   }
@@ -60,42 +62,43 @@ export class UsuarioComponent implements OnInit {
   }
 
   validarUsuario() {
-    let encontrado: boolean = false;
-    for (let u of this.usuarios) {
-      if (u.userName === this.usuario.userName) {
-        encontrado = false;
-      }
-    }
+    for (let u of this.usuarios)
+      if (u.userName === this.usuario.userName)
+        return true;
+    return false;
   }
 
   public agregarUsuario(form: FormGroup) {
     //if (form.valid) {
-
-    this.usuarioService.addUsuario(this.usuario)
-      .subscribe(
-        (result) => {
-          alert("agregado correctamente.");
-          this.obtenerUsuarios();
-          $('#exampleModal').modal('hide');
-        },
-        error => {
-          alert("Error en el envio.");
-        }
-      );
-    this.limpiar(form);
-    //}
+    if (!this.validarUsuario()) {
+      this.usuarioService.addUsuario(this.usuario)
+        .subscribe(
+          (result) => {
+            this.toastr.success("Usuario agregado correctamente", this.titulo);
+            this.obtenerUsuarios();
+            $('#exampleModal').modal('hide');
+          },
+          error => {
+            this.toastr.error("Error al agregar", this.titulo);
+          }
+        );
+      this.limpiar(form);
+    }
+    else{
+      this.toastr.error("El usuario ya esta registrado", this.titulo);
+    }
   }
 
   public eliminarUsuario(id: number) {
     this.usuarioService.deleteUsuario(id).subscribe(
       result => {
-        console.log("borrado correctamente.")
+        this.toastr.success("Se elimino correctamente", "Eliminar Usuario");
         //actualizo la tabla de usuarios
         this.obtenerUsuarios()
         return true;
       },
       error => {
-        console.error("Error al borrar!");
+        this.toastr.error("Error al borrar", "Eliminar Usuario");
         console.log(error);
         return false;
       }
@@ -112,14 +115,14 @@ export class UsuarioComponent implements OnInit {
   public modificarUsuario(form: FormGroup) {
     this.usuarioService.updateUsuario(this.usuario).subscribe(
       data => {
-        alert("modificado correctamente.")
+        this.toastr.success("Usuario actualizado correctamente", this.titulo);
         //actualizo la tabla de usuarios
         this.obtenerUsuarios();
         $('#exampleModal').modal('hide');
         return true;
       },
       error => {
-        console.error("Error updating!");
+        this.toastr.error("Erro al actualizar", this.titulo);
         console.log(error);
         return false;
       }
@@ -130,6 +133,7 @@ export class UsuarioComponent implements OnInit {
 
   public limpiar(form: FormGroup) {
     this.usuario = new Usuario();
+    $("#inputFoto").val(null);
     form.reset();
   }
 

@@ -7,6 +7,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { EscribanoService } from 'src/app/services/escribano.service';
 import { Escribano } from 'src/app/models/escribano';
 import { Constantes } from 'src/app/models/constantes/constantes';
+import { ToastrService } from 'ngx-toastr';
 
 
 declare var jQuery: any;
@@ -26,9 +27,7 @@ export class NovedadesComponent implements OnInit {
   titulo: string;
 
   constructor(public loginService: LoginService, private novedadService: NovedadService,
-    private escribanoService: EscribanoService, public perfil: Constantes) {
-    console.log("usuarioLogueado: " + loginService.usuarioLogueado);
-    console.log("localstorage: " + localStorage.length);
+    private escribanoService: EscribanoService, public perfil: Constantes, private toastr: ToastrService) {
     this.novedad = new Novedad();
     this.obtenerNovedades();
     this.obtenerEscribanos();
@@ -46,13 +45,13 @@ export class NovedadesComponent implements OnInit {
   cambiarTituloAgregar(form: FormGroup) {
     this.limpiar(form);
     this.isUpdate = false;
-    this.titulo = "Registrar novedad";
+    this.titulo = "Enviar novedad";
     //$('#novedadModal').modal({ backdrop: 'static', keyboard: false });
   }
 
   cambiarTituloModificar() {
     this.isUpdate = true;
-    this.titulo = "Modificar novedad";
+    this.titulo = "Responder novedad";
   }
 
   obtenerEscribanos() {
@@ -60,7 +59,6 @@ export class NovedadesComponent implements OnInit {
       .subscribe(
         (result) => {
           this.escribanos = result['escribanos'];
-          console.log("escribanos: " + this.escribanos);
         }
       );
   }
@@ -70,7 +68,6 @@ export class NovedadesComponent implements OnInit {
       .subscribe(
         (result) => {
           this.novedades = result['novedades'];
-          console.log("novedades: " + this.novedades);
         }
       );
   }
@@ -81,12 +78,12 @@ export class NovedadesComponent implements OnInit {
     this.novedadService.addNovedad(this.novedad)
       .subscribe(
         (result) => {
-          alert("novedad agregado correctamente.");
+          this.toastr.success("mensaje enviado correctamente", this.titulo);
           this.obtenerNovedades();
           $('#novedadModal').modal('hide');
         },
         error => {
-          alert("Error en el envio.");
+          this.toastr.error("Error al enviar mensaje", this.titulo);
         }
       );
 
@@ -127,16 +124,17 @@ export class NovedadesComponent implements OnInit {
   }
 
   public modificarNovedad(form: FormGroup) {
+    this.novedad.estado = "leido";
     this.novedadService.updateNovedad(this.novedad).subscribe(
       data => {
-        alert("modificado correctamente.")
+        this.toastr.success("Mensaje actualizado", this.titulo);
         //actualizo la tabla de escribanos
         this.obtenerNovedades();
         $('#novedadModal').modal('hide');
         return true;
       },
       error => {
-        console.error("Error updating!");
+        this.toastr.error("Error al actualizar mensaje", this.titulo);
         console.log(error);
         return false;
       }

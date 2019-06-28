@@ -4,6 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { NovedadService } from 'src/app/services/novedad.service';
 import { Constantes } from 'src/app/models/constantes/constantes';
+import { ToastrService } from 'ngx-toastr';
 
 declare var $: any;
 
@@ -18,12 +19,11 @@ export class NovedadEscribanoComponent implements OnInit {
   novedadesEnviadas: Array<Novedad>;
   novedad: Novedad;
 
-  isVer: boolean = false;
+  isEnviado: boolean = false;
   titulo: string;
 
-  constructor(public loginService: LoginService, private novedadService: NovedadService, public perfil: Constantes) {
-    console.log("usuarioLogueado: " + loginService.usuarioLogueado);
-    console.log("localstorage: " + localStorage.length);
+  constructor(public loginService: LoginService, private novedadService: NovedadService,
+     public perfil: Constantes, private toastr:ToastrService) {
     this.novedad = new Novedad();
     this.novedadesEnviadas = new Array<Novedad>();
     this.novedadesRecibidas = new Array<Novedad>();
@@ -39,18 +39,6 @@ export class NovedadEscribanoComponent implements OnInit {
     form.reset();
   }
 
-  cambiarTituloAgregar(form: FormGroup) {
-    this.limpiar(form);
-    this.isVer = false;
-    this.titulo = "Registrar novedad";
-    //$('#novedadModal').modal({ backdrop: 'static', keyboard: false });
-  }
-
-  cambiarTituloVer() {
-    this.isVer = true;
-    this.titulo = "Detalle de la novedad";
-  }
-
   obtenerNovedades() {
     this.novedadService.getNovedadesByEscribano(this.loginService.usuarioLogueado)
       .subscribe(
@@ -60,42 +48,42 @@ export class NovedadEscribanoComponent implements OnInit {
           result['novedades'].forEach(element => {
             let novedad = new Novedad();
             Object.assign(novedad, element);
-            if(novedad.estado == "enviado")
+            if (novedad.estado == "enviado")
               this.novedadesRecibidas.push(novedad);
             else
               this.novedadesEnviadas.push(novedad);
           });
         }
       );
-      console.log(this.novedadesRecibidas);
+    console.log(this.novedadesRecibidas);
   }
 
   public agregarNovedad(form: FormGroup) {
-    //if (form.valid) {
     this.novedad.estado = "no leido";
     this.novedad.escribano = this.novedadesEnviadas[0].escribano;
     this.novedadService.addNovedad(this.novedad)
       .subscribe(
         (result) => {
-          alert("el mensaje se envio correctamente.");
+          this.toastr.success("mensaje enviado correctamente", this.titulo);
           this.obtenerNovedades();
           $('#novedadModal').modal('hide');
         },
         error => {
-          alert("Error en el envio.");
+          this.toastr.error("Error al enviar mensaje", this.titulo);
         }
       );
 
     this.limpiar(form);
   }
 
-  public seleccionarNovedad(novedad: Novedad) {
-    this.cambiarTituloVer();
-    //Creo una copia del escribano recibido como parametro para NO modificarlo
-    //ya que el parametro esta mostrandose por el binding en el datatable
+  verNovedadRecibida(novedad: Novedad) {
+    this.isEnviado = false;
     this.novedad = Object.assign(this.novedad, novedad);
-    
-    console.log("escribano: " + this.novedad.escribano.apellido);
+  }
+
+  verNovedadEnviada(novedad: Novedad) {
+    this.isEnviado = true;
+    this.novedad = Object.assign(this.novedad, novedad)
   }
 
 

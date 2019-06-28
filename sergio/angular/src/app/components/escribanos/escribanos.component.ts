@@ -6,10 +6,13 @@ import { EscribaniaService } from 'src/app/services/escribania.service';
 import { EscribanoService } from 'src/app/services/escribano.service';
 import { FormGroup } from '@angular/forms';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { Usuario } from 'src/app/models/usuario';
 
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
+import { PagoService } from 'src/app/services/pago.service';
+import { Pago } from 'src/app/models/pago';
+import { NovedadService } from 'src/app/services/novedad.service';
+import { Novedad } from 'src/app/models/novedad';
 
 declare var jQuery: any;
 declare var $: any;
@@ -22,19 +25,24 @@ declare var $: any;
 export class EscribanosComponent implements OnInit {
   escribanias: Array<Escribania>;
   escribanos: Array<Escribano>;
+  pagos: Array<Pago>;
+  novedades: Array<Novedad>;
   escribano: Escribano;
 
   isUpdate: boolean = false;
   titulo: string;
   cargos = ["Titular", "Adscripto"];
+  estados = ["Habilitado", "Inhabilitado"];
 
   constructor(public loginService: LoginService, private escribaniaService: EscribaniaService,
     private escribanoService: EscribanoService, private usuarioService: UsuarioService,
-    private toastr: ToastrService) {
-  
+    private toastr: ToastrService, private pagoService: PagoService, private novedadService: NovedadService) {
+
     this.escribano = new Escribano();
     this.obtenerEscribanias();
     this.obtenerEscribanos();
+    this.obtenerNovedades();
+    this.obtenerPagos();
   }
 
   ngOnInit() {
@@ -60,6 +68,16 @@ export class EscribanosComponent implements OnInit {
   cambiarTituloModificar() {
     this.isUpdate = true;
     this.titulo = "Actualizar Escribano";
+  }
+
+  obtenerPagos() {
+    this.pagoService.getpagos()
+      .subscribe(
+        (result) => {
+          this.pagos = result['pagos'];
+          console.log(this.pagos);
+        }
+      );
   }
 
   obtenerEscribanias() {
@@ -89,46 +107,92 @@ export class EscribanosComponent implements OnInit {
       );
   }
 
-  showAgregar(){
+  obtenerNovedades() {
+    this.novedadService.getNovedades()
+      .subscribe(
+        (result) => {
+          this.novedades = result['novedades'];
+          console.log(this.novedades);
+        }
+      );
+  }
+
+  showAgregar() {
     Swal.fire({
-      title:'Agregar Escribano',
+      title: 'Agregar Escribano',
       text: 'Escribano agregado correctamente',
       type: 'success'
     });
   }
 
-  public agregarEscribano(form: FormGroup) {
-    //if (form.valid) {
-    this.escribanoService.addEscribano(this.escribano)
-      .subscribe(
-        (result) => {
-          this.showAgregar();
-          this.obtenerEscribanos();
-          $('#escribanoModal').modal('hide');
-        },
-        error => {
-          alert("Error en el envio.");
-        }
-      );
+  validarEscribano() {
+    for (let e of this.escribanos)
+      if (this.escribano.dni === e.dni)
+        return true;
+    return false;
+  }
 
-    this.limpiar(form);
+
+
+  public agregarEscribano(form: FormGroup) {
+    if (!this.validarEscribano()) {
+      this.escribanoService.addEscribano(this.escribano)
+        .subscribe(
+          (result) => {
+            this.toastr.success("Escribano agregado correctamente", this.titulo);
+            this.obtenerEscribanos();
+            $('#escribanoModal').modal('hide');
+          },
+          error => {
+            this.toastr.error("Error al agregar", this.titulo);
+          }
+        );
+
+      this.limpiar(form);
+    }
+    else {
+      this.toastr.warning("DNI del escribano ya se encuentra registrado", this.titulo);
+    }
+  }
+
+  validarPagos(idEscribano: number) {
+    for (let p of this.pagos)
+      if (p.escribano.id === idEscribano)
+        return true;
+    return false;
+  }
+
+  validarNovedades(idEscribano: number) {
+    for (let n of this.novedades)
+      if (n.escribano.id === idEscribano)
+        return true;
+    return false;
   }
 
   public eliminarEscribano(escribano: Escribano) {
     let id = escribano.id;
-    this.escribanoService.deleteEscribano(id).then(
-      result => {
-        console.log("ESCRIBANO borrado correctamente.");
-        //actualizo la tabla de escribanias
-        this.obtenerEscribanos()
-        return true;
-      },
-      error => {
-        console.error("Escribano: Error al borrar!");
-        console.log(error);
-        return false;
+    if (!this.validarPagos(id)) {
+      if (!this.validarNovedades(id)) {
+        this.escribanoService.deleteEscribano(id).then(
+          result => {
+            console.log("ESCRIBANO borrado correctamente.");
+            this.obtenerEscribanos()
+            return true;
+          },
+          error => {
+            console.error("Escribano: Error al borrar!");
+            console.log(error);
+            return false;
+          }
+        )
       }
-    )
+      else { 
+        this.toastr.warning("No se pudo borrar, el escribano registra novedades", "Eliminar Escribano")
+      }
+    }
+    else {
+      this.toastr.warning("No se pudo borrar, el escribano registra pagos", "Eliminar Escribano");
+    }
   }
 
   public seleccionarEscribano(escribano: Escribano) {
@@ -149,8 +213,7 @@ export class EscribanosComponent implements OnInit {
     console.log(this.escribano.fechaNacimiento);
     this.escribanoService.updateEscribano(this.escribano).subscribe(
       data => {
-        this.toastr.success("Se actualizo correctamente", this.titulo);
-        //actualizo la tabla de escribanias
+        this.toastr.success("Escribano actualizado correctamente", this.titulo);
         this.obtenerEscribanos();
         $('#escribanoModal').modal('hide');
         return true;

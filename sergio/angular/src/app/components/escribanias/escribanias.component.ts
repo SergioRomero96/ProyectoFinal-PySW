@@ -7,6 +7,9 @@ import { FormGroup } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { Results } from 'src/app/models/results';
 import { Geometry } from 'src/app/models/geometry';
+import { ToastrService } from 'ngx-toastr';
+import { EscribanoService } from 'src/app/services/escribano.service';
+import { Escribano } from 'src/app/models/escribano';
 
 declare var jQuery: any;
 declare var $: any;
@@ -19,6 +22,7 @@ declare var $: any;
 export class EscribaniasComponent implements OnInit {
   escribania: Escribania;
   escribanias: Array<Escribania>;
+  escribanos: Array<Escribano>;
   lista: Array<Results>;
   results: Results;
   geo: Geometry;
@@ -28,14 +32,23 @@ export class EscribaniasComponent implements OnInit {
   titulo: string;
   filterEscribania = '';
 
-  constructor(public loginService:LoginService, private escribaniaService: EscribaniaService, public perfil: Constantes, private service: MapaService) {
+  constructor(public loginService: LoginService, private escribaniaService: EscribaniaService,
+    public perfil: Constantes, private service: MapaService, private toastr: ToastrService,
+    private escribanoService: EscribanoService) {
     this.escribania = new Escribania();
     this.escribanias = new Array<Escribania>();
     this.obtenerEscribanias();
+    this.obtenerEscribanos();
   }
 
   ngOnInit() {
   }
+
+  onFileChanges(files) {
+    console.log("file change by method: ", files);
+    this.escribania.foto = files[0].base64;
+  }
+
 
   cambiarTituloAgregar(form: FormGroup) {
     this.limpiar(form);
@@ -58,37 +71,69 @@ export class EscribaniasComponent implements OnInit {
       );
   }
 
+  validarEscribania() {
+    for (let e of this.escribanias)
+      if (e.nombre === this.escribania.nombre)
+        return true;
+    return false;
+  }
+
   public agregarEscribania(form: FormGroup) {
-    //if (form.valid) {
-    this.escribaniaService.addEscribania(this.escribania)
-      .subscribe(
-        (result) => {
-          alert("agregado correctamente.");
-          this.obtenerEscribanias();
-          $('#escribaniaModal').modal('hide');
-        },
-        error => {
-          alert("Error en el envio.");
-        }
-      );
-    this.limpiar(form);
-    //}
+    if (!this.validarEscribania()) {
+      this.escribaniaService.addEscribania(this.escribania)
+        .subscribe(
+          (result) => {
+            this.toastr.success("Escribania agregada correctamente", this.titulo);
+            this.obtenerEscribanias();
+            $('#escribaniaModal').modal('hide');
+          },
+          error => {
+            this.toastr.error("Error al agregar", this.titulo);
+          }
+        );
+      this.limpiar(form);
+    }
+    else {
+      this.toastr.warning("Escribania ya se encuentra registrada", this.titulo);
+    }
+  }
+
+  obtenerEscribanos() {
+    this.escribanoService.getEscribanos().subscribe(
+      (result) => {
+        this.escribanos = result['escribanos'];
+        console.log(this.escribanos);
+      }
+    );
+
+  }
+
+  validarEscribanos(idEscribania: number) {
+    for (let e of this.escribanos)
+      if (e.escribania.id === idEscribania)
+        return true;
+    return false;
   }
 
   public eliminarEscribania(id: number) {
-    this.escribaniaService.deleteEscribania(id).subscribe(
-      result => {
-        console.log("borrado correctamente.")
-        //actualizo la tabla de escribanias
-        this.obtenerEscribanias()
-        return true;
-      },
-      error => {
-        console.error("Error al borrar!");
-        console.log(error);
-        return false;
-      }
-    )
+    if (!this.validarEscribanos(id)) {
+      this.escribaniaService.deleteEscribania(id).subscribe(
+        result => {
+          console.log("borrado correctamente.")
+          //actualizo la tabla de escribanias
+          this.obtenerEscribanias()
+          return true;
+        },
+        error => {
+          console.error("Error al borrar!");
+          console.log(error);
+          return false;
+        }
+      )
+    }
+    else {
+      this.toastr.warning("No se pudo borrar la escribania, porque posee escribanos asociados","Eliminar Escribania");
+    }
   }
 
   public seleccionarEscribania(escribania: Escribania) {
@@ -101,14 +146,13 @@ export class EscribaniasComponent implements OnInit {
   public modificarEscribania(form: FormGroup) {
     this.escribaniaService.updateEscribania(this.escribania).subscribe(
       data => {
-        alert("modificado correctamente.")
-        //actualizo la tabla de escribanias
+        this.toastr.success("Escribania actualizada correctamente", this.titulo);
         this.obtenerEscribanias();
         $('#escribaniaModal').modal('hide');
         return true;
       },
       error => {
-        console.error("Error updating!");
+        this.toastr.success("Error al actualizar", this.titulo);
         console.log(error);
         return false;
       }
@@ -118,30 +162,31 @@ export class EscribaniasComponent implements OnInit {
 
   public limpiar(form: FormGroup) {
     this.escribania = new Escribania();
+    $("#inputFoto").val(null);
     form.reset();
   }
 
 
 
-  verLonguitudLatitud(escribania: Escribania){
+  verLonguitudLatitud(escribania: Escribania) {
     console.log("la escribania es: " + escribania.nombre)
     this.escribania = Object.assign(this.escribania, escribania);
     this.service.getLatLng(this.escribania.direccion, this.escribania.localidad)
-    .subscribe(
-      (data) => {
-        this.lista = data["results"]
-        this.asignarValor();
-      }
+      .subscribe(
+        (data) => {
+          this.lista = data["results"]
+          this.asignarValor();
+        }
 
-      )
+      );
 
 
   }
-  asignarValor(){
+  asignarValor() {
 
     this.lat = this.lista[0].geometry.lat;
     this.lng = this.lista[0].geometry.lng;
-    console.log("valores de lat y lng: " +this.lat +", " + this.lng);
+    console.log("valores de lat y lng: " + this.lat + ", " + this.lng);
   }
 
 
