@@ -6,6 +6,7 @@ import { Constantes } from 'src/app/models/constantes/constantes';
 import { PagoService } from 'src/app/services/pago.service';
 import { EscribanoService } from 'src/app/services/escribano.service';
 import { FormGroup } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 declare var $: any;
 
@@ -18,16 +19,13 @@ export class PagosComponent implements OnInit {
   escribanos: Array<Escribano>;
   pagos: Array<Pago>;
   pago: Pago;
-
   isUpdate: boolean = false;
   titulo: string;
 
   constructor(public loginService: LoginService, public perfil: Constantes,
-    private pagoService: PagoService, private escribanoService: EscribanoService) {
-
-    console.log("usuarioLogueado: " + loginService.usuarioLogueado);
-    console.log("localstorage: " + localStorage.length);
+    private pagoService: PagoService, private escribanoService: EscribanoService, private toastr:ToastrService) {
     this.pago = new Pago();
+    this.pagos = new Array<Pago>();
     this.obtenerPagos();
     this.obtenerEscribanos();
   }
@@ -63,11 +61,18 @@ export class PagosComponent implements OnInit {
   }
 
   obtenerPagos() {
+    this.pagos = new Array<Pago>();
     this.pagoService.getpagos()
       .subscribe(
         (result) => {
-          this.pagos = result['pagos'];
-          console.log("pagos: " + this.pagos);
+          /*this.pagos = result['pagos'];
+          console.log(this.pagos);*/
+          result['pagos'].forEach(element => {
+            let e = new Pago();
+            e = element;
+            e.fecha = new Date(element['fecha']['timestamp']*1000);
+            this.pagos.push(e);
+          });
         }
       );
   }
@@ -77,12 +82,12 @@ export class PagosComponent implements OnInit {
     this.pagoService.addpago(this.pago)
       .subscribe(
         (result) => {
-          alert("pago agregado correctamente.");
+          this.toastr.success("pago registrado correctamente", this.titulo);
           this.obtenerPagos();
           $('#pagoModal').modal('hide');
         },
         error => {
-          alert("Error en el envio.");
+          this.toastr.error("Error al registrar pago", this.titulo);
         }
       );
 
@@ -96,7 +101,6 @@ export class PagosComponent implements OnInit {
     this.pagoService.deletepago(id).subscribe(
       result => {
         console.log("borrado correctamente.")
-        //actualizo la tabla de escribanos
         this.obtenerPagos()
         return true;
       },
@@ -112,6 +116,7 @@ export class PagosComponent implements OnInit {
     this.cambiarTituloModificar();
     //Creo una copia del escribano recibido como parametro para NO modificarlo
     //ya que el parametro esta mostrandose por el binding en el datatable
+    console.log( pago.fecha);
     this.pago = Object.assign(this.pago, pago);
     //se asigna a la propiedad escribano.empresa el correspondiente en el
     //array de empresas, ya que este array es fuente de datos del <select>
@@ -126,14 +131,13 @@ export class PagosComponent implements OnInit {
   public modificarPago(form: FormGroup) {
     this.pagoService.updatepago(this.pago).subscribe(
       data => {
-        alert("modificado correctamente.")
-        //actualizo la tabla de escribanos
+        this.toastr.success("Pago modificado correctamente", this.titulo);
         this.obtenerPagos();
         $('#pagoModal').modal('hide');
         return true;
       },
       error => {
-        console.error("Error updating!");
+        this.toastr.success("Error al modificar pago", this.titulo);
         console.log(error);
         return false;
       }

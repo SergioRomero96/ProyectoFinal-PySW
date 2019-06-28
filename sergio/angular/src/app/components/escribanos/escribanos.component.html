@@ -224,6 +224,19 @@
                               </div>
                             </div>
                           </div>
+                          <div class="form-group row" *ngIf="isUpdate">
+                            <label for="cmbEstado" class="col-sm-3 col-form-label">Estado:</label>
+                            <div class="col-sm-9">
+                              <select class="form-control" name="cmbEstado" required
+                                [(ngModel)]="escribano.estado" #estado="ngModel">
+                                <option *ngFor="let estado of estados" [ngValue]="estado">
+                                  {{estado}}</option>
+                              </select>
+                              <div [hidden]="estado.valid || estado.untouched" class="alert alert-danger">
+                                Estado es requerido.
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

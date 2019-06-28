@@ -143,7 +143,14 @@
 
                         </div>
                       </div>
-
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">foto:</label>
+                        <div class="col-sm-9">
+                          <input id="inputFoto" type="file" class="form-control-file" alife-file-to-base64
+                            (onFileChanged)="onFileChanges($event)" />
+                          <img *ngIf="escribania.foto" style="width: 100px; height: 100px" src="{{escribania.foto}}">
+                        </div>
+                      </div>
                       <!--<div class="form-group row">
                       <label for="cmbPerfil" class="col-sm-3 col-form-label">Perfil:</label>
                       <div class="col-sm-9">
@@ -177,10 +184,10 @@
       <h5 class="title  text-xl-center">NOMINA DE ESCRIBANIAS </h5>
 
       <div style="margin-top:25px;">
-          <agm-map *ngIf="lat != 0"  [zoom]="15" [latitude]="lat"  [longitude]="lng">
-            <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-          </agm-map>
-          </div>
+        <agm-map *ngIf="lat != 0" [zoom]="15" [latitude]="lat" [longitude]="lng">
+          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+        </agm-map>
+      </div>
 
 
       <div class="col-md-8 col-sm-8">
@@ -204,7 +211,8 @@
               <p>Telefono: {{item.telefono}}</p>
             </div>
             <div class="card-footer bg-primary  border-light">
-                <button  class="btn btn-outline-light fas fa-map-marker-alt"  type="button"  (click)="verLonguitudLatitud(item)" >Localizar en el  mapa</button>
+              <button class="btn btn-outline-light fas fa-map-marker-alt" type="button"
+                (click)="verLonguitudLatitud(item)">Localizar en el mapa</button>
 
 
             </div>
