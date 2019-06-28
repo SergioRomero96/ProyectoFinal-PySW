@@ -1,0 +1,8 @@
+.contenedor{
+    padding-left: 0px;
+    padding-right: 0px;
+    background: linear-gradient(to bottom, rgb(159, 159, 243), white);
+    -webkit-box-shadow: 2px -1px 13px 13px rgba(0,0,0,0.75);
+-moz-box-shadow: 2px -1px 13px 13px rgba(0,0,0,0.75);
+box-shadow: 2px -1px 13px 13px rgba(0,0,0,0.75);
+}
