@@ -39,6 +39,12 @@ import { FilterPagoPipe } from './pipes/filter-pago.pipe';
 import { FilterFechaPipe } from './pipes/filter-fecha.pipe';
 import { FilterMesPipe } from './pipes/filter-mes.pipe';
 import { PushNotificationModule } from 'ng-push-notification';
+import { Pag1Component } from './components/publico/pag1/pag1.component';
+import { Pag2Component } from './components/publico/pag2/pag2.component';
+import { Pag3Component } from './components/publico/pag3/pag3.component';
+import { HistoriaComponent } from './components/publico/historia/historia.component';
+import { Acad1Component } from './components/publico/acad1/acad1.component';
+import { Acad2Component } from './components/publico/acad2/acad2.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +66,13 @@ import { PushNotificationModule } from 'ng-push-notification';
     MapaComponent,
     FilterPagoPipe,
     FilterFechaPipe,
-    FilterMesPipe
+    FilterMesPipe,
+    Pag1Component,
+    Pag2Component,
+    Pag3Component,
+    HistoriaComponent,
+    Acad1Component,
+    Acad2Component
   ],
   imports: [
     BrowserModule,

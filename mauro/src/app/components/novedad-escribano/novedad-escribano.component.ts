@@ -18,7 +18,7 @@ export class NovedadEscribanoComponent implements OnInit {
   novedadesRecibidas: Array<Novedad>;
   novedadesEnviadas: Array<Novedad>;
   novedad: Novedad;
-
+  logo: boolean = false;
   isEnviado: boolean = false;
   titulo: string;
 
@@ -79,6 +79,9 @@ export class NovedadEscribanoComponent implements OnInit {
   verNovedadRecibida(novedad: Novedad) {
     this.isEnviado = false;
     this.novedad = Object.assign(this.novedad, novedad);
+    this.novedad.estado ="recibido";
+    this.novedadService.updateNovedad(this.novedad);
+    console.log("el nuevo estado es: " + this.novedad.estado);
   }
 
   verNovedadEnviada(novedad: Novedad) {

@@ -1,11 +1,12 @@
 
 
 <div class="container">
-    <section style="margin-top: 10px;">
+
     <div class="row">
-        <div class="col-lg-7">
-            <div class="row">
-                <div class="col-12">
+
+        <div class="col-md-9">
+        <section  style="margin-top: 10px;">
+
             <div id="demo" class="carousel slide" data-ride="carousel">
             <ul class="carousel-indicators">
               <li data-target="#demo" data-slide-to="0" class="active"></li>
@@ -36,38 +37,57 @@
               <span class="carousel-control-next-icon"></span>
             </a>
           </div>
-        </div>
-        </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-          <div class="card h-100">
-            <h4 class="card-header">Bienvenidos al colegio de escribanos de Jujuy </h4>
-            <div class="card-body">
-              <p class="card-text">Acá podrán ver las novedades, noticias, cursos que brinda el colegio de escribanos de Jujuy, también podrán logearse los escribanos para poder realizar pagos, consultas etc</p>
-            </div>
+
+
+
+
+
+
+
+
+
+          <div class="card border-dark"   style="margin-top: 15px;">
+              <div class="card-header"> <h2 class="h2 text-center"> Académicas</h2></div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 mb-6">
+                  <div class="card-body">
+
+                      <img  class="img-fluid" src="../../../assets/imagenes/acad1.jpg" alt="">
+                        <a style="margin-top: 10px"  [routerLink]="['/acad1']"> <h3 class="h3">Capacitación en herramientas informáticas para el quehacer notarial</h3> </a>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-6 mb-6  " >
+                  <div class="card-body">
+
+                      <img class="img-fluid" src="../../../assets/imagenes/acad2.jpg" alt="">
+                        <a style="margin-top: 10px" [routerLink]="['/acad1']" > <h3 class="h3"> Firma de convenio con el Colegio de Escribanos </h3></a>
+                    </div>
+                  </div>
+
+                </div>
 
           </div>
-        </div>
-      </div>
-    </section>
 
 
 
 
 
-    <h2 style="margin-top: 15px;">Últimas noticias</h2>
 
+          <div class="card border-dark" style="margin-top: 15px;" >
+    <div class="card-header"> <h2 class="h2 text-center" style="margin-top: 15px;">Últimas noticias</h2></div>
+            <div class="card-body">
     <div class="row">
-      <div class="col-lg-4 mb-4">
+
+      <div class=" col-lg-4 mb-4">
         <div class="card h-100 text-center">
           <img class="card-img-top" src="../../../assets/imagenes/cursoSecretariado.png" alt="">
           <div class="card-body">
             <p class="card-text">Curso de Secretariado Notarial: <br> Inscripciones abiertas - Primer módulo</p>
           </div>
           <div class="card-footer">
-            <a href="#" class="btn btn-primary">Leer más</a>
+              <input class="btn btn-outline-danger" type="submit" value="Leer más"   [routerLink]="['/pag3']"/>
           </div>
-
         </div>
       </div>
       <div class="col-lg-4 mb-4">
@@ -79,7 +99,7 @@
             <p class="card-text">Continúan abiertas las inscripciones para los Talleres Culturales destinados tanto a la comunidad notarial como al público en general</p>
           </div>
           <div class="card-footer">
-            <a href="#" class="btn btn-primary">Leer más</a>
+              <input class="btn btn-outline-danger" type="submit" value="Leer más"    [routerLink]="['/pag2']"/>
           </div>
         </div>
       </div>
@@ -91,9 +111,21 @@
             <p class="card-text">Sigue la Muestra Homenaje «Diálogos visuales con Miguel Ángel Budini» en la Sala Enrique Mónaco del Colegio de Escribanos de la Provincia de Jujuy</p>
           </div>
           <div class="card-footer">
-            <a href="#" class="btn btn-primary">Leer más</a>
+              <input class="btn btn-outline-danger" type="submit" value="Leer más"    [routerLink]="['/pag1']"/>
+
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+
+  </section>
+
     </div>
+    <div class="col-md-3 hidden-sm">
+        <app-aside></app-aside>
+      </div>
+</div>
+</div>
