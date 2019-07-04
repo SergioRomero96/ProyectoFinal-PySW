@@ -1,0 +1,90 @@
+<header>
+  <img class="img-fluid" src="../../../assets/imagenes/logo2.jpg" alt="logo escribanos">
+  <div class="row head">
+    <div class="col-md-12">
+    </div>
+  </div>
+  <nav class="navbar navbar-expand-lg navbar-dark head">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="['inicio']">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Institucional
+          </a>
+          <div class="dropdown-menu head" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item " [routerLink]="['nosotros']">Nosotros</a>
+            <a class="dropdown-item " [routerLink]="['historia']">Historia</a>
+          </div>
+
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['escribanias']">Escribanias</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['contactenos']">Contactenos</a>
+        </li>
+        <li class="nav-item">
+
+        </li>
+        <li class="nav-item dropdown" *ngIf="loginService.usuarioLogueado.perfil===perfil.ADMINISTRATIVO">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Administración
+          </a>
+          <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" [routerLink]="['escribanos']">Escribanos</a>
+            <a class="dropdown-item" [routerLink]="['novedades']">Novedades</a>
+            <a class="dropdown-item" [routerLink]="['pagos']">Pagos</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown" *ngIf="loginService.usuarioLogueado.perfil===perfil.GERENTE">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Gerente
+          </a>
+          <div class="dropdown-menu head" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" [routerLink]="['escribanos']">Escribanos</a>
+            <a class="dropdown-item" [routerLink]="['pagos']">Pagos</a>
+          </div>
+        </li>
+        <li class="nav-item" *ngIf="loginService.usuarioLogueado.perfil===perfil.ADMINISTRADOR">
+          <a class="nav-link" [routerLink]="['usuario']">Usuarios</a>
+        </li>
+
+        <li class="nav-item" *ngIf="loginService.usuarioLogueado.perfil===perfil.SOCIO">
+          <a class="nav-link" [routerLink]="['novedad-escribano']">Novedades</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="btn btn-info" *ngIf="!loginService.isLogueado" [routerLink]="['login']">
+            <i class="fa fa-sign-in-alt"></i> Iniciar Sesion
+          </a>
+        </li>
+        <li class="nav-item dropdown" *ngIf="loginService.isLogueado">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <span class="mr-2">{{loginService.usuarioLogueado.userName}}</span>
+            <img *ngIf="loginService.usuarioLogueado.foto" src="{{loginService.usuarioLogueado.foto}}" width="40"
+              height="40" class="rounded-circle">
+            <img *ngIf="!loginService.usuarioLogueado.foto" src="../../../assets/imagenes/perfildefault.jpg" width="40"
+              height="40" class="rounded-circle">
+          </a>
+          <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="userDropdown">
+            <a class="dropdown-item head" [routerLink]="['login']" (click)="logout()">
+              <i class="fa fa-power-off"></i> Cerrar Sesion
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>

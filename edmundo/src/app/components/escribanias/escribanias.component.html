@@ -1,0 +1,339 @@
+<div class="container ">
+  <!--PERFIL ADMINISTRATIVO-->
+  <div class="mt-5" *ngIf="loginService.isLogueado">
+
+    <div *ngIf="loginService.usuarioLogueado.perfil===perfil.ADMINISTRATIVO">
+      <div class="card">
+        <div class="card-header">
+          <h4> Gestion de Escribanias</h4>
+        </div>
+        <div class="card-body">
+
+          <h4 class="text-center">Lista de Escribanias</h4>
+          <hr>
+          <div class="form-group row">
+            <div class="col-sm-6 mt-3">
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#escribaniaModal"
+                (click)="cambiarTituloAgregar(frmEscribania)">
+                <i class="fa fa-plus"></i>Nueva Escribania
+              </button>
+            </div>
+            <div class="col-md-6 col-sm-6  mt-3">
+              <input type="text" class="form-control" placeholder="Ingrese nombre de la escribania a buscar..."
+                name="txtFilterTeam" [(ngModel)]=" filterEscribania">
+            </div>
+          </div>
+
+          <div id="tablaEscribania" class="table-responsive ">
+            <table class="table table-bordered table-hover mt-2"
+              [mfData]="escribanias | filter: {nombre: filterEscribania}" #mf="mfDataTable" [mfRowsOnPage]="5">
+              <thead class="thead-dark">
+                <tr>
+                  <th style="width: 5%">
+                    <mfDefaultSorter by="id">Id</mfDefaultSorter>
+                  </th>
+                  <th style="width: 20%">
+                    <mfDefaultSorter by="nombre">Nombre</mfDefaultSorter>
+                  </th>
+                  <th style="width: 25%">
+                    <mfDefaultSorter by="direccion">Direccion</mfDefaultSorter>
+                  </th>
+                  <th style="width: 25%">
+                    <mfDefaultSorter by="localidad">Localidad</mfDefaultSorter>
+                  </th>
+                  <th style="width: 13%">
+                    <mfDefaultSorter by="localidad">Telefono</mfDefaultSorter>
+                  </th>
+                  <th style="width: 12%">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of mf.data ">
+                  <td>{{item.id}}</td>
+                  <td>{{item.nombre}}</td>
+                  <td>{{item.direccion}}</td>
+                  <td>{{item.localidad}}</td>
+                  <td>{{item.telefono}}</td>
+                  <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-success mr-2" data-toggle="modal"
+                      data-target="#escribaniaModal" (click)="seleccionarEscribania(item)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-danger" (click)="eliminarEscribania(item.id)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6">
+                    <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+
+          </div>
+          <div>
+            <button type="button" class="btn btn-info" (click)="print()">
+              <i class="fas fa-file-pdf"> Generar PDF</i>
+            </button>
+          </div>
+
+
+          <!-- Modal -->
+          <div #exampleModal class="modal fade" id="escribaniaModal" tabindex="-1" role="dialog"
+            aria-labelledby="escribaniaModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="escribaniaModalLabel">{{titulo}}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form #frmEscribania="ngForm">
+                    <div class="form-group row">
+                      <label for="txtNombre" class="col-sm-3 col-form-label">nombre:</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control" name="txtNombre" placeholder="Ingrese nombre" required
+                          [(ngModel)]="escribania.nombre" #nombre="ngModel" maxlength="20">
+                        <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)" class="alert alert-danger">
+                          <div *ngIf="nombre.errors.required">
+                            nombre es requerido.
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="form-group row">
+                      <label for="txtNombre" class="col-sm-3 col-form-label">nombre:</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control" name="txtNombre" placeholder="Ingrese nombre" required
+                          [(ngModel)]="escribania.nombre" #nombre="ngModel">
+                        <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)" class="alert alert-danger">
+                          <div *ngIf="nombre.errors.required">
+                            nombre es requerido.
+                          </div>
+                        </div>
+                      </div>
+                    </div> -->
+
+
+
+
+                    <div class="form-group row">
+                      <label for="txtDireccion" class="col-sm-3 col-form-label">direccion:</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control" placeholder="Ingrese direccion" name="txtDireccion"
+                          required [(ngModel)]="escribania.direccion" #direccion="ngModel">
+                        <div *ngIf="direccion.invalid && (direccion.dirty || direccion.touched)"
+                          class="alert alert-danger">
+                          <div *ngIf="direccion.errors.required">
+                            Direccion es requerido.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="txtLocalidad" class="col-sm-3 col-form-label">Localidad:</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control" placeholder="Ingrese localidad" name="txtLocalidad"
+                          required [(ngModel)]="escribania.localidad" #localidad="ngModel">
+                        <div *ngIf="localidad.invalid && (localidad.dirty || localidad.touched)"
+                          class="alert alert-danger">
+                          <div *ngIf="localidad.errors.required">
+                            Localidad es requerido.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="txtTelefono" class="col-sm-3 col-form-label">Telefono:</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control" placeholder="Ingrese telefono" name="txtTelefono"
+                          [(ngModel)]="escribania.telefono" #telefono="ngModel" pattern="[3][8][0-9]*">
+                        <div *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)"
+                          class="alert alert-danger">
+                          <div *ngIf="telefono.errors.required">
+                            Localidad es requerido.
+                          </div>
+                          <div *ngIf="telefono.errors.pattern">
+                            El número de teléfono debe comenzar con 38
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--
+                    <div class="form-group row">
+                      <label for="txtTelefono" class="col-sm-3 col-form-label">Telefono:</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control" placeholder="Ingrese telefono" name="txtTelefono"
+                          [(ngModel)]="escribania.telefono">
+
+                      </div>
+                    </div> -->
+                    <div class="form-group row">
+                      <label class="col-sm-3 col-form-label">foto:</label>
+                      <div class="col-sm-9">
+                        <input id="inputFoto" type="file" class="form-control-file" alife-file-to-base64
+                          (onFileChanged)="onFileChanges($event)" />
+                        <img *ngIf="escribania.foto" style="width: 100px; height: 100px" src="{{escribania.foto}}">
+                      </div>
+                    </div>
+                    <!--<div class="form-group row">
+                      <label for="cmbPerfil" class="col-sm-3 col-form-label">Perfil:</label>
+                      <div class="col-sm-9">
+                        <select class="form-control" name="cmbPerfil" required [(ngModel)]="escribania.perfil"
+                          #perfil="ngModel">
+                          <option *ngFor="let perfil of perfiles" [value]="perfil">{{perfil}}</option>
+                        </select>
+                        <div [hidden]="perfil.valid || perfil.untouched" class="alert alert-danger">
+                          Perfil es requerido.
+                        </div>
+                      </div>
+                    </div>-->
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="limpiar(frmEscribania)">Cancelar</button>
+                  <button type="button" *ngIf="isUpdate" [disabled]="!frmEscribania.form.valid" class="btn btn-primary"
+                    (click)="modificarEscribania(frmEscribania)">Actualizar</button>
+                  <button type="button" *ngIf="!isUpdate" [disabled]="!frmEscribania.form.valid" class="btn btn-primary"
+                    (click)="agregarEscribania(frmEscribania)">Guardar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--PRFIL DE GERENTE-->
+  <div *ngIf="loginService.isLogueado">
+    <div *ngIf="loginService.usuarioLogueado.perfil===perfil.GERENTE">
+      <div class="card">
+        <div class="card-header">
+          <h4> Gestion de Escribanias</h4>
+        </div>
+        <div class="card-body">
+
+          <h4 class="text-center">Lista de Escribanias</h4>
+          <hr>
+          <div class="form-group row">
+            <div class="col-md-6 col-sm-6  mt-3">
+              <input type="text" class="form-control" placeholder="Ingrese nombre de la escribania a buscar..."
+                name="txtFilterTeam" [(ngModel)]=" filterEscribania">
+            </div>
+          </div>
+
+          <div class="table-responsive ">
+            <table class="table table-bordered table-hover mt-2" [mfData]="escribanias " #mf="mfDataTable"
+              [mfRowsOnPage]="5">
+              <thead class="thead-dark">
+                <tr>
+                  <th style="width: 5%">
+                    <mfDefaultSorter by="id">Id</mfDefaultSorter>
+                  </th>
+                  <th style="width: 20%">
+                    <mfDefaultSorter by="nombre">Nombre</mfDefaultSorter>
+                  </th>
+                  <th style="width: 25%">
+                    <mfDefaultSorter by="direccion">Direccion</mfDefaultSorter>
+                  </th>
+                  <th style="width: 25%">
+                    <mfDefaultSorter by="localidad">Localidad</mfDefaultSorter>
+                  </th>
+                  <th style="width: 13%">
+                    <mfDefaultSorter by="localidad">Telefono</mfDefaultSorter>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of mf.data | filter: {nombre: filterEscribania}">
+                  <td>{{item.id}}</td>
+                  <td>{{item.nombre}}</td>
+                  <td>{{item.direccion}}</td>
+                  <td>{{item.localidad}}</td>
+                  <td>{{item.telefono}}</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5">
+                    <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+
+          </div>
+          <div>
+            <button type="button" class="btn btn-info" (click)="print()">
+              <i class="fas fa-file-pdf"> Generar PDF</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--PERFIL DE USUARIO COMUN-->
+  <div *ngIf="!loginService.isLogueado ||  !(loginService.usuarioLogueado.perfil===perfil.GERENTE)">
+    <div *ngIf="!(loginService.usuarioLogueado.perfil===perfil.ADMINISTRATIVO)">
+      <h5 class="title  text-xl-center">NOMINA DE ESCRIBANIAS </h5>
+
+      <div style="margin-top:25px;">
+        <agm-map *ngIf="lat != 0" [zoom]="15" [latitude]="lat" [longitude]="lng">
+          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+        </agm-map>
+      </div>
+
+
+      <div class="col-md-8 col-sm-8">
+        <input type="text" class="form-control" placeholder="Ingrese nombre de la escribania a buscar..."
+          name="txtFilterTeam" [(ngModel)]="filterEscribania">
+
+      </div>
+      <br>
+      <div class="row card-columns">
+
+        <div class=" col-lg-6 mt-2 "
+          *ngFor="let item of escribanias | paginate: {itemsPerPage: 7, currentPage: p} | filter:filterEscribania">
+          <div class="card text-white ">
+            <img src="../../../assets/imagenes/nosotros/dos.jpg" class="card-img-top" width="150">
+            <div class="card-header bg-primary  border-light " style="text-align: center">
+              <h3 class="btn card-title">{{item.nombre}}</h3>
+            </div>
+            <div class="card-body bg-info">
+              <p>Direccion: {{item.direccion}}</p>
+              <p>Localidad: {{item.localidad}}</p>
+              <p>Telefono: {{item.telefono}}</p>
+            </div>
+            <div class="card-footer bg-primary  border-light">
+              <button class="btn btn-outline-light fas fa-map-marker-alt" type="button"
+                (click)="verLonguitudLatitud(item)">Localizar en el mapa</button>
+
+
+            </div>
+          </div>
+          <br>
+        </div>
+
+
+      </div>
+      <pagination-controls (pageChange)="p = $event"> </pagination-controls>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,11 @@
+
+<button (click)="mostrar()">ppppp</button>
+<agm-map   [latitude]="-24.1852569" [longitude]="-65.2994789">
+    <div *ngFor="let ciudad of lista" >
+      <!-- Para controlar que no se agregue las latitudes y longitudes de San salvador de Jujuy -->
+      <!-- <div *ngIf="ciudad.geometry.lat != -24.19457 && ciudad.geometry.lng !=  -65.29712" > -->
+  <agm-marker [latitude]="ciudad.geometry.lat" [longitude]="ciudad.geometry.lng"></agm-marker>
+</div>
+<!-- </div> -->
+</agm-map>
+

@@ -1,0 +1,35 @@
+.margen{
+    padding-top: 30px;
+    margin-top: 80px;
+    margin-bottom: 80px;   
+}
+
+.cuerpo{
+    margin-top: 10%;
+  
+}
+.forma{
+    border: solid 6px ;
+   /* background: rgb(131, 229, 238);*/
+-webkit-box-shadow: 14px 14px 11px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 14px 14px 11px 0px rgba(0,0,0,0.75);
+box-shadow: 14px 14px 11px 0px rgba(0,0,0,0.75);
+border-radius: 90px 10px 90px 10px;
+
+}
+
+.borde{
+    -webkit-box-shadow: 14px 14px 11px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 14px 14px 11px 0px rgba(0,0,0,0.75);
+box-shadow: 14px 14px 11px 0px rgba(0,0,0,0.75);
+    border-radius: 90px 20px 20px 20px;
+}
+.boton{
+    -webkit-box-shadow: 17px -18px 5px -11px rgba(0,0,0,0.75);
+    -moz-box-shadow: 17px -18px 5px -11px rgba(0,0,0,0.75);
+    box-shadow: 17px -18px 5px -11px rgba(0,0,0,0.75);
+    border-radius:90px 1px;
+    margin-top: 60px;
+    margin-bottom: 0%;
+    width: 180px; 
+}

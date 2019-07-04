@@ -1,0 +1,147 @@
+<div *ngIf="loginService.isLogueado">
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h4> Gestion de Usuarios</h4>
+      </div>
+      <div class="card-body">
+
+
+        <h4 class="text-center">Lista de Usuarios</h4>
+        <hr>
+        <div class="form-group row">
+          <div class="col-sm-6">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#exampleModal"
+              (click)="cambiarTituloAgregar(frmUsuario)">
+              <i class="fa fa-plus"></i>Nuevo Usuario
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover mt-2" [mfData]="usuarios" #mf="mfDataTable" [mfRowsOnPage]="5">
+            <thead class="thead-dark">
+              <tr>
+                <th style="width: 10%">
+                  <mfDefaultSorter by="id">Id</mfDefaultSorter>
+                </th>
+                <th style="width: 25%">
+                  <mfDefaultSorter by="userName">Nombre de Usuario</mfDefaultSorter>
+                </th>
+                <th style="width: 25%">
+                  <mfDefaultSorter by="perfil">Perfil</mfDefaultSorter>
+                </th>
+                <th style="width: 20%">
+                  Foto
+                </th>
+                <th style="width: 20%">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mf.data ">
+                <td>{{item.id}}</td>
+                <td>{{item.userName}}</td>
+                <td>{{item.perfil}}</td>
+                <td class="text-center"><img style="width: 75px; height: 75px" src="{{item.foto}}"></td>
+                <td>
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-success mr-2 mb-md-0 mb-sm-1" data-toggle="modal" data-target="#exampleModal"
+                    (click)="seleccionarUsuario(item)">
+                    <i class="fa fa-pencil-alt"></i>
+                  </button>
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-danger" (click)="eliminarUsuario(item.id)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+
+        </div>
+
+
+        <!-- Modal -->
+        <div #exampleModal class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{titulo}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form #frmUsuario="ngForm">
+                  <div class="form-group row">
+                    <label for="txtUsuario" class="col-sm-3 col-form-label">UserName:</label>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" name="txtUsuario" placeholder="Ingrese userName" required
+                        [(ngModel)]="usuario.userName" #userName="ngModel">
+                      <div *ngIf="userName.invalid && (userName.dirty || userName.touched)" class="alert alert-danger">
+                        <div *ngIf="userName.errors.required">
+                          UserName es requerido.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="txtPassword" class="col-sm-3 col-form-label">password:</label>
+                    <div class="col-sm-9">
+                      <input type="password" class="form-control" placeholder="Ingrese password" name="txtPassword"
+                        required [(ngModel)]="usuario.password" #password="ngModel">
+                      <div *ngIf="password.invalid && (password.dirty || password.touched)" class="alert alert-danger">
+                        <div *ngIf="password.errors.required">
+                          Password es requerido.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="cmbPerfil" class="col-sm-3 col-form-label">Perfil:</label>
+                    <div class="col-sm-9">
+                      <select class="form-control" name="cmbPerfil" required [(ngModel)]="usuario.perfil"
+                        #perfil="ngModel">
+                        <option *ngFor="let perfil of perfiles" [value]="perfil">{{perfil}}</option>
+                      </select>
+                      <div [hidden]="perfil.valid || perfil.untouched" class="alert alert-danger">
+                        Perfil es requerido.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">foto Perfil:</label>
+                    <div class="col-sm-9">
+                      <input id="inputFoto" type="file"  class="form-control-file" alife-file-to-base64  (onFileChanged)="onFileChanges($event)" />
+                      <img *ngIf="usuario.foto" style="width: 100px; height: 100px" src="{{usuario.foto}}">
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                  (click)="limpiar(frmUsuario)">Cancelar</button>
+                <button type="button" *ngIf="isUpdate" [disabled]="!frmUsuario.form.valid" class="btn btn-primary"
+                  (click)="modificarUsuario(frmUsuario)">Actualizar</button>
+                <button type="button" *ngIf="!isUpdate" [disabled]="!frmUsuario.form.valid" class="btn btn-primary"
+                  (click)="agregarUsuario(frmUsuario)">Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
