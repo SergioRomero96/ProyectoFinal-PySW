@@ -30,5 +30,18 @@ header h2{
     font-size: 20px;
 }
 .head{
-  background:#800000;
+    background:#800000;
 }
+
+
+header nav ul li a{
+    color: #fff;
+    padding: 20px;
+    display: block;
+    text-decoration: none;
+}
+header nav ul li a:hover{
+   
+    background: #a53838;
+}
+

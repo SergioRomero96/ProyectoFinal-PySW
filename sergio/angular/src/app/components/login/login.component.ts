@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
             
             //localstorage usado para mostrar o no un componente
             localStorage.setItem('usuarioSesion', JSON.stringify(user));
-            console.log("localstore: " + localStorage.length);
             this.loginService.isLogueado = localStorage.length != 0;
             this.loginService.usuarioLogueado =  JSON.parse(localStorage.getItem('usuarioSesion'));
             this.router.navigateByUrl(this.returnUrl);

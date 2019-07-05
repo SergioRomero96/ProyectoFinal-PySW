@@ -10,6 +10,10 @@ import { Geometry } from 'src/app/models/geometry';
 import { ToastrService } from 'ngx-toastr';
 import { EscribanoService } from 'src/app/services/escribano.service';
 import { Escribano } from 'src/app/models/escribano';
+import * as jsPDF from 'jspdf';
+import * as printJS from 'print-js';
+import Swal from 'sweetalert2';
+
 
 declare var jQuery: any;
 declare var $: any;
@@ -20,6 +24,7 @@ declare var $: any;
   styleUrls: ['./escribanias.component.css']
 })
 export class EscribaniasComponent implements OnInit {
+
   escribania: Escribania;
   escribanias: Array<Escribania>;
   escribanos: Array<Escribano>;
@@ -31,6 +36,7 @@ export class EscribaniasComponent implements OnInit {
   isUpdate: boolean = false;
   titulo: string;
   filterEscribania = '';
+  escrib: JSON;
 
   constructor(public loginService: LoginService, private escribaniaService: EscribaniaService,
     public perfil: Constantes, private service: MapaService, private toastr: ToastrService,
@@ -67,6 +73,7 @@ export class EscribaniasComponent implements OnInit {
         (result) => {
           this.escribanias = result['escribanias'];
           console.log(this.escribanias);
+          this.escrib = result['escribanias'];
         }
       );
   }
@@ -115,24 +122,40 @@ export class EscribaniasComponent implements OnInit {
     return false;
   }
 
+  confirmarEliminar(id: number){
+    Swal.fire({
+      title: 'Desea Eliminar la Escribania?',
+      text: 'Se va a eliminar la escribania con ID: ' + id,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si',
+      cancelButtonText:'No'
+    }).then((result) => {
+      if (result.value) {
+        this.eliminarEscribania(id);
+      }
+    })
+  }
+
   public eliminarEscribania(id: number) {
     if (!this.validarEscribanos(id)) {
       this.escribaniaService.deleteEscribania(id).subscribe(
         result => {
-          console.log("borrado correctamente.")
-          //actualizo la tabla de escribanias
+          this.toastr.success("Escribania eliminada correctamente", "Eliminar Escribania");
           this.obtenerEscribanias()
           return true;
         },
         error => {
-          console.error("Error al borrar!");
+          this.toastr.error("Error al eliminar la escribania", "Eliminar Escribania");
           console.log(error);
           return false;
         }
       )
     }
     else {
-      this.toastr.warning("No se pudo borrar la escribania, porque posee escribanos asociados","Eliminar Escribania");
+      this.toastr.warning("No se pudo borrar la escribania, porque posee escribanos asociados", "Eliminar Escribania");
     }
   }
 
@@ -179,15 +202,26 @@ export class EscribaniasComponent implements OnInit {
         }
 
       );
-
-
   }
-  asignarValor() {
 
+  asignarValor() {
     this.lat = this.lista[0].geometry.lat;
     this.lng = this.lista[0].geometry.lng;
     console.log("valores de lat y lng: " + this.lat + ", " + this.lng);
   }
 
 
+  generarPDF() {
+    var doc = document.getElementById("tablaEscribania");
+    var pdf = new jsPDF('p', 'pt', 'a4');
+    pdf.setFontSize(22);
+    pdf.text("Listado de Escribania", 80, 20);
+    pdf.setFontSize(10);
+    pdf.fromHTML(doc, 10, 30);
+    pdf.save("Escribano.pdf");
+  }
+
+  print() {
+    printJS({ printable: this.escrib, properties: ['id', 'nombre', 'direccion', 'localidad', 'telefono'], type: 'json' })
+  }
 }

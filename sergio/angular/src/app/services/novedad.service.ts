@@ -60,4 +60,20 @@ export class NovedadService {
     //envio en el body el novedad transformado en un JSON
     return this._http.post('http://localhost/colegioEscribanos/public/index.php/novedad/' + novedad.id + '/edit', body, httpOption);
   }
+
+
+  //
+  cambiarEstadoNovedad(novedad: Novedad){
+    console.log("el valor es:"+ novedad.estado);
+    const httpOption = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    let body = JSON.stringify(novedad);
+    //envio en el body el novedad transformado en un JSON
+    return this._http.post('http://localhost/colegioEscribanos/public/index.php/novedad/' + novedad.id + '/cambiarLeido', body, httpOption);
+
+  }
+
 }

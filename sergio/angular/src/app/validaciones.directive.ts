@@ -1,21 +1,18 @@
 // import { Directive } from '@angular/core';
-// import { AbstractControl, NG_VALIDATORS } from "@angular/forms";
+// import { AbstractControl, NG_VALIDATORS } from '@angular/forms';
 
-// function verificarLongitud(c: AbstractControl){
-//   if(c.value == null){
+// function validarNegativo(n: AbstractControl) {
+//     if (n.value == null) return null;
+//     if (n.value < 1) {
+//         return { isNegativo: true };
+//     }
 //     return null;
-//   }
-//   if(c.value.indexOf('')>=8){
-//     return {longuitudMinima: true}
-//   }
-//   return null;
-
 // }
 
 // @Directive({
-//   selector: '[verificar-longuitud]',
-//   providers:[
-//     { provide: NG_VALIDATORS, multi: true, useValue: verificarLongitud}
-//   ]
+//     selector: '[valida-negativo]',
+//     providers: [
+//         { provide: NG_VALIDATORS, multi: true, useValue: validarNegativo }
+//     ]
 // })
-// export class  LonguitudMinima{}
+// export class ValidateNegativo { }

@@ -1,6 +1,7 @@
 import { MapaComponent } from './components/mapa/mapa.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+
 //AGREGADOS
 import { FormsModule } from '@angular/forms';
 import {DataTableModule} from 'angular-6-datatable';
@@ -35,7 +36,17 @@ import { NovedadEscribanoComponent } from './components/novedad-escribano/noveda
 import { FilterPipe } from './pipes/filter.pipe';
 import { AsideComponent } from './components/layout/aside/aside.component';
 import { AgmCoreModule } from '@agm/core';
-
+import { FilterPagoPipe } from './pipes/filter-pago.pipe';
+import { FilterFechaPipe } from './pipes/filter-fecha.pipe';
+import { FilterMesPipe } from './pipes/filter-mes.pipe';
+import { PushNotificationModule } from 'ng-push-notification';
+import { Pag1Component } from './components/publico/pag1/pag1.component';
+import { Pag2Component } from './components/publico/pag2/pag2.component';
+import { Pag3Component } from './components/publico/pag3/pag3.component';
+import { HistoriaComponent } from './components/publico/historia/historia.component';
+import { Acad1Component } from './components/publico/acad1/acad1.component';
+import { Acad2Component } from './components/publico/acad2/acad2.component';
+//import {ValidateNegativo} from './validaciones.directive';
 
 @NgModule({
   declarations: [
@@ -54,7 +65,17 @@ import { AgmCoreModule } from '@agm/core';
     NovedadEscribanoComponent,
     FilterPipe,
     AsideComponent,
-    MapaComponent
+    MapaComponent,
+    FilterPagoPipe,
+    FilterFechaPipe,
+    FilterMesPipe,
+    Pag1Component,
+    Pag2Component,
+    Pag3Component,
+    HistoriaComponent,
+    Acad1Component,
+    Acad2Component,
+    //ValidateNegativo
   ],
   imports: [
     BrowserModule,
@@ -66,6 +87,7 @@ import { AgmCoreModule } from '@agm/core';
     NgxPaginationModule,
     AlifeFileToBase64Module,
 
+    PushNotificationModule.forRoot(/* Default settings here, interface PushNotificationSettings */),
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(),// ToastrModule added
     AgmCoreModule.forRoot({

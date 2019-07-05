@@ -1,14 +1,15 @@
 <div class="container">
-    <div *ngIf="loginService.isLogueado">
+    <!--PERDIL ADMINISTRATIVO-->
+    <div class="mt-5" *ngIf="loginService.isLogueado">
 
         <div *ngIf="loginService.usuarioLogueado.perfil===perfil.ADMINISTRATIVO">
             <div class="card">
-                <h4 class="card-header">Gestion de Pagos</h4>
+                <h4 class="card-header text-center">Gestion de Pagos</h4>
                 <div class="card-body">
                     <h4 class="text-center">Lista de Pagos registrados</h4>
                     <hr>
                     <div class="form-group row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4 mt-3">
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary mr-2" data-toggle="modal"
                                 data-target="#pagoModal" (click)="cambiarTituloAgregar(frmPago)">
@@ -40,7 +41,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of mf.data ">
+                                <tr *ngFor="let item of mf.data">
                                     <td>{{item.id}}</td>
                                     <td>{{item.escribano.apellido}}, {{item.escribano.nombre}}</td>
                                     <td>{{item.fecha | date: 'dd/MM/yyyy'}}</td>
@@ -52,7 +53,8 @@
                                             <i class="fa fa-edit"></i>
                                         </button>
                                         <!-- Button trigger modal -->
-                                        <button type="button" class="btn btn-danger" (click)="eliminarPago(item.id)">
+                                        <button type="button" class="btn btn-danger"
+                                            (click)="confirmarEliminar(item.id)">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -68,7 +70,11 @@
                         </table>
 
                     </div>
-
+                    <div>
+                        <button type="button" class="btn btn-info" (click)="print()">
+                            <i class="fas fa-file-pdf"> Generar PDF</i>
+                        </button>
+                    </div>
 
                     <!-- Modal -->
                     <div #exampleModal class="modal fade" id="pagoModal" tabindex="-1" role="dialog"
@@ -83,13 +89,13 @@
                                 </div>
                                 <div class="modal-body">
                                     <form #frmPago="ngForm">
-                                        <!--<div class="form-group row">
+                                        <div class="form-group row">
                                             <label for="txtFecha" class="col-sm-3 col-form-label">Fecha Pago:</label>
                                             <div class="col-sm-9">
-                                            <input type="text" class="form-control" name="txtFecha" [value]="pago.fecha | date: 'dd/MM/yyyy'" [(ngModel)]="fechaActual">
-                                            <label>Fecha: {{pago.fecha}}</label>
+                                                <input type="text" class="form-control" name="txtFecha"
+                                                    [value]="pago.fecha | date: 'dd/MM/yyyy'" disabled>
                                             </div>
-                                        </div>-->
+                                        </div>
                                         <div class="form-group row">
                                             <label for="cmbEscribano" class="col-sm-3 col-form-label">Escribano:</label>
                                             <div class="col-sm-9">
@@ -107,13 +113,16 @@
                                         <div class="form-group row">
                                             <label for="txtImporte" class="col-sm-3 col-form-label">Importe:</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" name="txtImporte"
+                                                <input type="number" class="form-control" name="txtImporte"
                                                     placeholder="Ingrese el importe" required [(ngModel)]="pago.importe"
-                                                    #importe="ngModel">
+                                                    #importe="ngModel" valida-negativo>
                                                 <div *ngIf="importe.invalid && (importe.dirty || importe.touched)"
                                                     class="alert alert-danger">
                                                     <div *ngIf="importe.errors.required">
                                                         importe es requerido.
+                                                    </div>
+                                                    <div *ngIf="importe.errors.isNegativo">
+                                                        Importe No valido
                                                     </div>
                                                 </div>
                                             </div>
@@ -128,6 +137,228 @@
                                     <button type="button" *ngIf="!isUpdate" [disabled]="!frmPago.form.valid"
                                         class="btn btn-primary" (click)="agregarPago(frmPago)">Guardar</button>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--PERFIL DE GERENTE-->
+    <div class="mt-5" *ngIf="loginService.isLogueado">
+        <div *ngIf="loginService.usuarioLogueado.perfil===perfil.GERENTE">
+            <!-- Nav tabs -->
+            <div class="card text-center">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#porMes">Buscar por Mes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#porDia">Buscar por Dia</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#porEscribano">Buscar por Escribano</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body mt-4">
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane container active" id="porMes">
+                            <div class="card">
+                                <h4 class="card-title text-center">Buscar por Mes</h4>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <div class="col-md-4 col-sm-4  mt-3">
+                                            <select class="form-control" name="cmbMes" [(ngModel)]="filtroFechaMes">
+                                                <option *ngFor="let mes of meses" [value]="mes.codigo">
+                                                    {{mes.descripcion}}
+                                                </option>
+                                            </select>
+                                            <!--<input type="text" class="form-control"
+                                                    placeholder="Ingrese Mes a buscar..." name="txtFilterFechaMes"
+                                                    [(ngModel)]=" filtroFechaMes">-->
+
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover mt-2" [mfData]="pagos "
+                                            #mf="mfDataTable" [mfRowsOnPage]="5">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th style="width: 5%">
+                                                        <mfDefaultSorter by="id">Id</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 40%">
+                                                        <mfDefaultSorter by="dni">DNI</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 40%">
+                                                        <mfDefaultSorter by="escribano">Escribano</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        <mfDefaultSorter by="feha">Fecha del pago</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        <mfDefaultSorter by="importe">Importe</mfDefaultSorter>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let item of mf.data |filterMes: filtroFechaMes ">
+                                                    <td>{{item.id}}</td>
+                                                    <td>{{item.escribano.dni}}</td>
+                                                    <td>{{item.escribano.apellido}}, {{item.escribano.nombre}}</td>
+                                                    <td>{{item.fecha | date: 'dd/MM/yyyy'}}</td>
+                                                    <td>{{item.importe}}</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]">
+                                                        </mfBootstrapPaginator>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-info" (click)="print()">
+                                            <i class="fas fa-file-pdf"> Generar PDF</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane container fade" id="porDia">
+                            <div class="card">
+                                <h4 class="card-title text-center">Busqueda por Dia</h4>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <div class="col-md-4 col-sm-4  mt-3">
+                                            <input type="text" class="form-control"
+                                                placeholder="Ingrese Dia a buscar..." name="txtFilterFecha"
+                                                [(ngModel)]=" filtroFecha">
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover mt-2" [mfData]="pagos"
+                                            #mf="mfDataTable" [mfRowsOnPage]="5">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th style="width: 5%">
+                                                        <mfDefaultSorter by="id">Id</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 40%">
+                                                        <mfDefaultSorter by="dni">DNI</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 40%">
+                                                        <mfDefaultSorter by="escribano">Escribano</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        <mfDefaultSorter by="feha">Fecha del pago</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        <mfDefaultSorter by="importe">Importe</mfDefaultSorter>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let item of mf.data  |filterFecha: filtroFecha">
+                                                    <td>{{item.id}}</td>
+                                                    <td>{{item.escribano.dni}}</td>
+                                                    <td>{{item.escribano.apellido}}, {{item.escribano.nombre}}</td>
+                                                    <td>{{item.fecha | date: 'dd/MM/yyyy'}}</td>
+                                                    <td>{{item.importe}}</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]">
+                                                        </mfBootstrapPaginator>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-info" (click)="print()">
+                                            <i class="fas fa-file-pdf"> Generar PDF</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane container fade" id="porEscribano">
+                            <div class="card">
+                                <h4 class="card-title text-center">Buscar por Escribano </h4>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <div class="col-md-4 col-sm-4  mt-3">
+                                            <input type="text" class="form-control"
+                                                placeholder="Ingrese nombre del escribano a buscar..."
+                                                name="txtFilterEscribano" [(ngModel)]=" filtroPago">-
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover mt-2" [mfData]="pagos"
+                                            #mf="mfDataTable" [mfRowsOnPage]="5">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th style="width: 5%">
+                                                        <mfDefaultSorter by="id">Id</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 40%">
+                                                        <mfDefaultSorter by="dni">DNI</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 40%">
+                                                        <mfDefaultSorter by="escribano">Escribano</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        <mfDefaultSorter by="feha">Fecha del pago</mfDefaultSorter>
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        <mfDefaultSorter by="importe">Importe</mfDefaultSorter>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let item of mf.data  |filterPago: filtroPago">
+                                                    <td>{{item.id}}</td>
+                                                    <td>{{item.escribano.dni}}</td>
+                                                    <td>{{item.escribano.apellido}}, {{item.escribano.nombre}}</td>
+                                                    <td>{{item.fecha | date: 'dd/MM/yyyy'}}</td>
+                                                    <td>{{item.importe}}</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]">
+                                                        </mfBootstrapPaginator>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-info" (click)="print()">
+                                            <i class="fas fa-file-pdf"> Generar PDF</i>
+                                        </button>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>

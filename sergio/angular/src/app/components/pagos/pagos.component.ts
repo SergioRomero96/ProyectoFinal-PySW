@@ -7,6 +7,9 @@ import { PagoService } from 'src/app/services/pago.service';
 import { EscribanoService } from 'src/app/services/escribano.service';
 import { FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import * as printJS from 'print-js';
+import Swal from 'sweetalert2';
+
 
 declare var $: any;
 
@@ -21,9 +24,11 @@ export class PagosComponent implements OnInit {
   pago: Pago;
   isUpdate: boolean = false;
   titulo: string;
+  impPago: JSON;
+  filtroFecha = '';
 
   constructor(public loginService: LoginService, public perfil: Constantes,
-    private pagoService: PagoService, private escribanoService: EscribanoService, private toastr:ToastrService) {
+    private pagoService: PagoService, private escribanoService: EscribanoService, private toastr: ToastrService) {
     this.pago = new Pago();
     this.pagos = new Array<Pago>();
     this.obtenerPagos();
@@ -32,6 +37,46 @@ export class PagosComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  meses = [
+    {
+      "codigo": "1",
+      "descripcion": "Enero"
+    }, {
+      "codigo": "2",
+      "descripcion": "Febrero"
+    }, {
+      "codigo": "3",
+      "descripcion": "Marzo"
+    }, {
+      "codigo": "4",
+      "descripcion": "Abril"
+    }, {
+      "codigo": "5",
+      "descripcion": "Mayo"
+    }, {
+      "codigo": "6",
+      "descripcion": "Junio"
+    }, {
+      "codigo": "7",
+      "descripcion": "Julio"
+    }, {
+      "codigo": "8",
+      "descripcion": "Agosto"
+    }, {
+      "codigo": "9",
+      "descripcion": "Septiembre"
+    }, {
+      "codigo": "10",
+      "descripcion": "Octubre"
+    }, {
+      "codigo": "11",
+      "descripcion": "Noviembre"
+    }, {
+      "codigo": "12",
+      "descripcion": "Diciembre"
+    }
+  ];
 
   public limpiar(form: FormGroup) {
     this.pago = new Pago();
@@ -56,6 +101,7 @@ export class PagosComponent implements OnInit {
         (result) => {
           this.escribanos = result['escribanos'];
           console.log("escribanos: " + this.escribanos);
+
         }
       );
   }
@@ -70,15 +116,16 @@ export class PagosComponent implements OnInit {
           result['pagos'].forEach(element => {
             let e = new Pago();
             e = element;
-            e.fecha = new Date(element['fecha']['timestamp']*1000);
+            e.fecha = new Date(element['fecha']['timestamp'] * 1000);
+            e.fecha.setDate(e.fecha.getDate()+1);
             this.pagos.push(e);
+            this.impPago = result['pagos']
           });
         }
       );
   }
 
   agregarPago(form: FormGroup) {
-    //if (form.valid) {
     this.pagoService.addpago(this.pago)
       .subscribe(
         (result) => {
@@ -93,19 +140,34 @@ export class PagosComponent implements OnInit {
 
     this.limpiar(form);
   }
-  //}
 
+  confirmarEliminar(id: number) {
+    Swal.fire({
+      title: 'Desea cancelar el pago registrado?',
+      text: 'Se va a cancelar el pago con ID: ' + id,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.value) {
+        this.eliminarPago(id);
+      }
+    })
+  }
 
   public eliminarPago(id: number) {
     console.log("eliminar: " + id);
     this.pagoService.deletepago(id).subscribe(
       result => {
-        console.log("borrado correctamente.")
+        this.toastr.success("pago cancelado correctamente", "Cancelar Pago");
         this.obtenerPagos()
         return true;
       },
       error => {
-        console.error("Error al borrar!");
+        this.toastr.success("Error al cancelar el pago", "Cancelar Pago");
         console.log(error);
         return false;
       }
@@ -114,12 +176,12 @@ export class PagosComponent implements OnInit {
 
   public seleccionarPago(pago: Pago) {
     this.cambiarTituloModificar();
-    //Creo una copia del escribano recibido como parametro para NO modificarlo
+    //Creo una copia del pago recibido como parametro para NO modificarlo
     //ya que el parametro esta mostrandose por el binding en el datatable
-    console.log( pago.fecha);
+    console.log(pago.fecha);
     this.pago = Object.assign(this.pago, pago);
-    //se asigna a la propiedad escribano.empresa el correspondiente en el
-    //array de empresas, ya que este array es fuente de datos del <select>
+    //se asigna a la propiedad pago.escribano el correspondiente en el
+    //array de escribanos, ya que este array es fuente de datos del <select>
 
     this.pago.escribano = this.escribanos.find(function (item: Escribano) {
       return item.id === pago.escribano.id;
@@ -145,4 +207,7 @@ export class PagosComponent implements OnInit {
     this.limpiar(form);
   }
 
+  print() {
+    printJS({ printable: this.impPago, properties: ['id', 'escribano.apellido', 'escribano.nombre', 'fecha', 'importe'], type: 'json' })
+  }
 }
