@@ -39,6 +39,7 @@ class UsuarioController extends AbstractController
             $result['status'] = 'ok';
             $result['id'] = $user[0]->getId();
             $result['userName'] = $user[0]->getUserName();
+            $result['password'] = $user[0]->getPassword();
             $result['perfil'] = $user[0]->getPerfil();
             $result['foto'] = $user[0]->getFoto();
             
@@ -48,6 +49,24 @@ class UsuarioController extends AbstractController
             $result['perfil'] = '';
         }
         return new Response(json_encode($result), 200);
+    }
+    
+
+    /**
+     * @Route("/usuarios", name="usuario_all", methods={"GET"})
+     */
+    public function getSocios(UsuarioRepository $usuarioRepository): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $usuarios = $em->getRepository('App:Usuario')->findAll();
+        $usuarios = array('usuarios' => $usuarios);
+        $encoders = array(new JsonEncoder());
+        $normalizers = array(new ObjectNormalizer());
+        $serializer = new Serializer($normalizers, $encoders);
+        $response = new Response();
+        $response->setContent($serializer->serialize($usuarios, 'json'));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
     /**
@@ -136,7 +155,6 @@ class UsuarioController extends AbstractController
      */
     public function delete($id): Response
     {
-        echo ('Usuario id' + $id);
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository('App:Usuario')->find($id);
         if (!$usuario) {

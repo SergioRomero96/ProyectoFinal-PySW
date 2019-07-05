@@ -51,6 +51,39 @@ class EscribanoController extends AbstractController
     }
 
     /**
+     * @Route("/getEscribanoByUsuario", name="escribano_usuario", methods={"GET","POST"})
+     */
+    public function getEscribanoByUsuario(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        $idUsuario = $data['id'];
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('App:Escribano');
+        $query = $repository->createQueryBuilder('e')
+            ->where('e.usuario = :usuario')
+            ->setParameter('usuario', $idUsuario)
+            ->getQuery();
+
+        $escribanoArray = $query->getResult();
+
+        if ($escribanoArray != null) {
+            $result['status'] = 'ok';
+            $result['id'] = $escribanoArray[0]->getId();
+            $result['dni'] = $escribanoArray[0]->getDni();
+            $result['apellido'] = $escribanoArray[0]->getApellido();
+            $result['nombre'] = $escribanoArray[0]->getNombre();
+            $result['matricula'] = $escribanoArray[0]->getMatricula();
+            $result['cargo'] = $escribanoArray[0]->getCargo();
+            $result['estado'] = $escribanoArray[0]->getEstado();
+            
+        } else {
+            $result['status'] = 'bad';
+            $result['dni'] = '';
+        }
+        return new Response(json_encode($result), 200);
+    }
+
+    /**
      * @Route("/new", name="escribano_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
@@ -62,8 +95,8 @@ class EscribanoController extends AbstractController
         $escribano->setApellido($data['apellido']);
         $escribano->setNombre($data['nombre']);
 
-        $fecha = new \DateTime($data['fechaNacimiento']);
-        $escribano->setFechaNacimiento($fecha);
+        /*$fecha = new \DateTime($data['fechaNacimiento']);
+        $escribano->setFechaNacimiento($fecha);*/
         $escribano->setDireccion($data['direccion']);
         $escribano->setMatricula($data['matricula']);
         $escribano->setCargo($data['cargo']);
@@ -79,7 +112,7 @@ class EscribanoController extends AbstractController
         //confecciono una entidad usuario para asignar a escribano
         $usuarioArray = $data['usuario'];
         //creamos un array criteria con los parametros de busqueda de un usuario en la bd
-        //$criteria = array('userName' => $usuarioArray['userName'], 'password' => $usuarioArray['password']);
+        //$criteria = array('escribanoArrayName' => $usuarioArray['escribanoArrayName'], 'password' => $usuarioArray['password']);
         //$em = $this->getDoctrine()->getManager();
         //$usuario = $em->getRepository("App:Usuario")->findBy($criteria);
 

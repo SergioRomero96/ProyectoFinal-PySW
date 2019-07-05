@@ -53,6 +53,7 @@ class PagoController extends AbstractController
        //recupero atributos
        $data = json_decode($request->getContent(), true);
        $pago = new Pago();
+       
        $fecha = new \DateTime($data['fecha']);
        $pago->setFecha($fecha);
        $pago->setImporte($data['importe']);
@@ -89,8 +90,6 @@ class PagoController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $em = $this->getDoctrine()->getManager();
         $pago = $em->getRepository('App:Pago')->find($id);
-        $fecha = new \DateTime($data['fecha']);
-        $pago->setFecha($fecha);
         $pago->setImporte($data['importe']);
         //recupero la entidad escribano de la BD que se corresponde con la id
         //que se recibe en formato JSON y le asigno a la propiedad escribano de escribano.

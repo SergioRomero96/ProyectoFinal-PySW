@@ -15,20 +15,21 @@ declare var $;
 })
 export class HeaderComponent implements OnInit {
   usuario: Usuario;
-  titulo:string;
+  titulo: string;
 
   constructor(public loginService: LoginService, public perfil: Constantes,
-     private usuarioService:UsuarioService, private toastr:ToastrService) { 
-      this.usuario = new Usuario();
+    private usuarioService: UsuarioService, private toastr: ToastrService) {
+    this.usuario = new Usuario();
     this.titulo = "Actualizar Perfil";
   }
 
   ngOnInit() {
   }
 
-  getUsuario(){
-    if(this.loginService.usuarioLogueado !=null){
-      this.usuario = this.loginService.usuarioLogueado;
+  getUsuario() {
+    if (this.loginService.usuarioLogueado != null) {
+      Object.assign(this.usuario, this.loginService.usuarioLogueado);
+
       console.log(this.usuario.userName)
     }
   }
@@ -39,11 +40,16 @@ export class HeaderComponent implements OnInit {
   }
 
   public modificarUsuario(form: FormGroup) {
+    console.log(this.usuario.password);
     this.usuarioService.updateUsuario(this.usuario).subscribe(
       data => {
         this.toastr.success("Perfil actualizado correctamente", this.titulo);
-        localStorage.removeItem('usuarioSesion');
-        localStorage.setItem('usuarioSesion', JSON.stringify(this.usuario));
+        this.toastr.info("Debe cerrar Sesion, para actualizar los cambios", this.titulo);
+        console.log(this.usuario.password);
+        //localStorage.removeItem('usuarioSesion');
+        //localStorage.setItem('usuarioSesion', JSON.stringify(this.usuario));
+        //this.loginService.usuarioLogueado = JSON.parse(localStorage.getItem('usuarioSesion'));
+
         $('#exampleModal').modal('hide');
         return true;
       },
@@ -58,7 +64,6 @@ export class HeaderComponent implements OnInit {
   }
 
   public limpiar(form: FormGroup) {
-    this.usuario = new Usuario();
     $("#inputFoto").val(null);
     form.reset();
   }

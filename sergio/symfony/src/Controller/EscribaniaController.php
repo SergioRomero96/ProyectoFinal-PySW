@@ -56,7 +56,8 @@ class EscribaniaController extends AbstractController
         $escribania->setDireccion($data['direccion']);
         $escribania->setLocalidad($data['localidad']);
         $escribania->setTelefono($data['telefono']);
-
+        if(isset($data['foto']))
+            $escribania->setFoto($data['foto']);
         $em = $this->getDoctrine()->getManager();
 
         $em->persist($escribania);
@@ -88,6 +89,7 @@ class EscribaniaController extends AbstractController
         $escribania->setDireccion($data['direccion']);
         $escribania->setLocalidad($data['localidad']);
         $escribania->setTelefono($data['telefono']);
+        $escribania->setFoto($data['foto']);
 
         //guardo en la BD la entidad escribania modificada.
         $em->persist($escribania);

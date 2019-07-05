@@ -1,10 +1,6 @@
 <header>
   <img class="img-fluid" src="../../../assets/imagenes/logo2.jpg" alt="logo escribanos">
-  <div class="row head">
-    <div class="col-md-12">
-    </div>
-  </div>
-  <nav class="navbar navbar-expand-lg navbar-dark head">
+  <nav class="navbar navbar-expand-lg navbar-dark ">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -14,16 +10,15 @@
         <li class="nav-item active" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['inicio']">Inicio</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             Institucional
           </a>
-          <div class="dropdown-menu head" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item " [routerLink]="['nosotros']">Nosotros</a>
-            <a class="dropdown-item " [routerLink]="['historia']">Historia</a>
+          <div class="dropdown-menu menuclass" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" [routerLink]="['nosotros']">Nostros</a>
+            <a class="dropdown-item" [routerLink]="['historia']">Historia</a>
           </div>
-
         </li>
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['escribanias']">Escribanias</a>
@@ -39,7 +34,7 @@
             aria-haspopup="true" aria-expanded="false">
             Administración
           </a>
-          <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+          <div class="dropdown-menu menuclass" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" [routerLink]="['escribanos']">Escribanos</a>
             <a class="dropdown-item" [routerLink]="['novedades']">Novedades</a>
             <a class="dropdown-item" [routerLink]="['pagos']">Pagos</a>
@@ -48,9 +43,9 @@
         <li class="nav-item dropdown" *ngIf="loginService.usuarioLogueado.perfil===perfil.GERENTE">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-            Gerente
+            Administración
           </a>
-          <div class="dropdown-menu head" aria-labelledby="navbarDropdown">
+          <div class="dropdown-menu menuclass" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" [routerLink]="['escribanos']">Escribanos</a>
             <a class="dropdown-item" [routerLink]="['pagos']">Pagos</a>
           </div>
@@ -75,12 +70,14 @@
             <span class="mr-2">{{loginService.usuarioLogueado.userName}}</span>
             <img *ngIf="loginService.usuarioLogueado.foto" src="{{loginService.usuarioLogueado.foto}}" width="40"
               height="40" class="rounded-circle">
+            <img *ngIf="!loginService.usuarioLogueado.foto" src="../../../assets/imagenes/perfil.jpeg" width="40"
+              height="40" class="rounded-circle">
           </a>
-          <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="userDropdown">
-            <a class="dropdown-item head" data-toggle="modal" data-target="#exampleModal" >
+          <div class="dropdown-menu dropdown-menu-right shadow menuclass" aria-labelledby="userDropdown">
+            <a class="dropdown-item head" data-toggle="modal" data-target="#exampleModal" (click)="getUsuario()">
               <i class="fa fa-user"></i> Actualizar Perfil
             </a>
-            <a class="dropdown-item head" [routerLink]="['login']" (click)="logout()">
+            <a class="dropdown-item" [routerLink]="['login']" (click)="logout()">
               <i class="fa fa-power-off"></i> Cerrar Sesion
             </a>
           </div>
@@ -88,6 +85,8 @@
       </ul>
     </div>
   </nav>
+
+  <!--MODAL-->
   <div #exampleModal class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -125,7 +124,7 @@
               </div>
             </div>
 
-            
+
             <div class="form-group row">
               <label class="col-sm-3 col-form-label">foto Perfil:</label>
               <div class="col-sm-9">
