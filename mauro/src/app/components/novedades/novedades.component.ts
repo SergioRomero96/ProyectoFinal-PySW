@@ -20,7 +20,8 @@ declare var $: any;
 })
 export class NovedadesComponent implements OnInit {
   escribanos: Array<Escribano>;
-  novedades: Array<Novedad>;
+  novedadesEnviadas: Array<Novedad>;
+  novedadesRecibidas: Array<Novedad>;
   novedad: Novedad;
 
   isUpdate: boolean = false;
@@ -64,10 +65,22 @@ export class NovedadesComponent implements OnInit {
   }
 
   obtenerNovedades() {
+    this.novedadesEnviadas = new Array<Novedad>();
+    this.novedadesRecibidas = new Array<Novedad>();
     this.novedadService.getNovedades()
       .subscribe(
         (result) => {
-          this.novedades = result['novedades'];
+          result['novedades'].forEach(element => {
+            let novedad = new Novedad();
+            Object.assign(novedad, element);
+            novedad.fecha = new Date(element['fecha']['timestamp'] * 1000);
+            novedad.fecha.setDate(novedad.fecha.getDate()+1);
+            if (novedad.estado === "enviado" || novedad.estado === "recibido")
+              this.novedadesEnviadas.push(novedad);
+            else
+              this.novedadesRecibidas.push(novedad);
+          });
+          //this.novedades = result['novedades'];
         }
       );
   }

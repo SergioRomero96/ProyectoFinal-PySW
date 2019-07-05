@@ -1,21 +1,25 @@
-// import { Directive } from '@angular/core';
-// import { AbstractControl, NG_VALIDATORS } from "@angular/forms";
 
-// function verificarLongitud(c: AbstractControl){
-//   if(c.value == null){
-//     return null;
-//   }
-//   if(c.value.indexOf('')>=8){
-//     return {longuitudMinima: true}
-//   }
-//   return null;
+import { Validator, AbstractControl, NG_VALIDATORS } from "@angular/forms";
+import { Directive, Input } from "@angular/core";
 
-// }
 
-// @Directive({
-//   selector: '[verificar-longuitud]',
-//   providers:[
-//     { provide: NG_VALIDATORS, multi: true, useValue: verificarLongitud}
-//   ]
-// })
-// export class  LonguitudMinima{}
+@Directive({
+  selector: "[controlNumeros]",
+  providers: [{
+      provide: NG_VALIDATORS,
+      useExisting: controlDeNumeros,
+      multi: true
+  }]
+})
+export class controlDeNumeros implements Validator {
+  validate(c: AbstractControl): { [key: string]: any; } {
+
+
+    if (c.value < 0) return { "negativo": true };
+
+
+  }
+  registerOnValidatorChange?(fn: () => void): void {
+      throw new Error("Method not implemented.");
+  }
+}

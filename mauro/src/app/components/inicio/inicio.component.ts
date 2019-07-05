@@ -4,6 +4,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { NovedadService } from 'src/app/services/novedad.service';
 import { PushNotificationService } from 'ng-push-notification';
 import { Escribano } from 'src/app/models/escribano';
+import { Constantes } from 'src/app/models/constantes/constantes';
 
 
 //     npm install ng-push-notification
@@ -20,21 +21,23 @@ export class InicioComponent implements OnInit {
   escribano: Escribano;
   novedad: Novedad;
   novedades: Array<Novedad>;
-  constructor(public loginService: LoginService, private pushNotification: PushNotificationService,private  novedadService: NovedadService) {
+  constructor(public loginService: LoginService, private pushNotification: PushNotificationService, private novedadService: NovedadService, private perfil:Constantes) {
 
     this.novedadesRecibidas = new Array<Novedad>();
     this.novedadesEnviadas = new Array<Novedad>();
     this.novedades = new Array<Novedad>();
-console.log("tipo de usuario:"+ this.loginService.usuarioLogueado.perfil)
-    this.obtenerNovedades();
+    console.log("tipo de usuario:" + this.loginService.usuarioLogueado.perfil)
+    if(this.loginService.usuarioLogueado.perfil == perfil.SOCIO)
+      this.obtenerNovedades();
     this.showPush();
 
-   }
+  }
 
   ngOnInit() {
   }
 
   obtenerNovedades() {
+    let isRecibido = false;
     this.novedadService.getNovedadesByEscribano(this.loginService.usuarioLogueado)
       .subscribe(
         (result) => {
@@ -43,37 +46,38 @@ console.log("tipo de usuario:"+ this.loginService.usuarioLogueado.perfil)
           result['novedades'].forEach(element => {
             let novedad = new Novedad();
             Object.assign(novedad, element);
-            if(novedad.estado == "enviado"){
+            if (novedad.estado == "enviado") {
+              isRecibido = true;
               this.novedadesRecibidas.push(novedad);
-              this.showAnotherPush();
-
             }
-            else
-              this.novedadesEnviadas.push(novedad);
+
+            else if(novedad.estado =="no leido"){
+              isRecibido = true;
+              this.novedades.push(novedad);
+            }
+
           });
+          if(isRecibido){
+            this.showAnotherPush();
+          }
         }
       );
-      console.log("novedades recibidas " +this.novedadesRecibidas);
   }
 
-  obtenerNovedades2(){
+  obtenerNovedades2() {
     this.novedadService.getNovedadesByEscribano(this.loginService.usuarioLogueado).subscribe(
       data => {
         this.novedades = data['novedades'];
-        console.log("Las novedades son: "+this.novedades);
+        console.log("Las novedades son: " + this.novedades);
       }
     )
 
   }
 
-
-
-//Metodo para comprobar si el escribano tiene mensajes no leidos
-
-
+  //Metodo para comprobar si el escribano tiene mensajes no leidos
 
   showPush() {
-    Notification.requestPermission(function(result) {
+    Notification.requestPermission(function (result) {
       if (result === 'denied') {
         console.log('Permission wasn\'t granted. Allow a retry.');
         return;
@@ -85,35 +89,36 @@ console.log("tipo de usuario:"+ this.loginService.usuarioLogueado.perfil)
     });
   }
 
-
-
-
- private async showAnotherPush() { // la función se llamará apenas el usuario acepte los permisos
-console.log("abrió");
-  if (this.loginService.usuarioLogueado.perfil == "socio"){
-    console.log("Entró");
-    if(this.novedadesRecibidas.length > 0){
-      const notification = await this.pushNotification.show('Colegio de escribanos de Jujuy',{
-        body: "Tenés nuevas notificaciones",
-        icon: "../../../assets/imagenes/logo.jpg" } );
-        setTimeout(() => notification.close(), 6000);
-        notification.onclick = function(event) { // función para enviar a una nueva ventana
-         event.preventDefault(); // abre la página en una nueva ventana cuando hago click
-         window.open('http://localhost/escribanosSite3/novedad-escribano', '_blank');
-       }
-    }else{
-      console.log("tamaño" + this.novedadesRecibidas.length);
-    }
-
-  }
-
-
-
-
-else{
-  console.log("El usuario no es SOCIO");
-  }
-}
+  private async showAnotherPush() { // la función se llamará apenas el usuario acepte los permisos
+    console.log("abrió");
+      if (this.loginService.usuarioLogueado.perfil == "socio"){
+        console.log("Entró");
+        if(this.novedadesRecibidas.length > 0){
+          const notification = await this.pushNotification.show('Colegio de escribanos de Jujuy',{
+            body: "Tenés nuevas notificaciones",
+            icon: "../../../assets/imagenes/logo.jpg" } );
+            setTimeout(() => notification.close(), 6000);
+            notification.onclick = function(event) { // función para enviar a una nueva ventana
+             event.preventDefault(); // abre la página en una nueva ventana cuando hago click
+             window.open('http://localhost/escribanosSite3/novedad-escribano', '_blank');
+           }
+        }
+      }
+      console.log("valor es: "+this.novedadesRecibidas.length);
+      console.log("valor es: "+this.novedades.length);
+      if(this.loginService.usuarioLogueado.perfil == "administrativo"){
+          if(this.novedades.length > 0){
+            const notification = await this.pushNotification.show('Colegio de escribanos de Jujuy',{
+              body: "Tenés nuevas notificaciones",
+              icon: "../../../assets/imagenes/logo.jpg" } );
+              setTimeout(() => notification.close(), 6000);
+              notification.onclick = function(event) { // función para enviar a una nueva ventana
+               event.preventDefault(); // abre la página en una nueva ventana cuando hago click
+               window.open('http://localhost/escribanosSite3/novedad-escribano', '_blank');
+             }
+          }
+        }
+      }
 
 }
 
