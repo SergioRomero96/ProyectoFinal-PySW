@@ -20,7 +20,7 @@
               </button>
             </div>
             <div class="col-md-6 col-sm-6  mt-3">
-              <input type="text" class="form-control" placeholder="Ingrese nombre de la escribania a buscar..."
+              <input type="text" class="form-control texto" placeholder="Ingrese nombre de la escribania a buscar..."
                 name="txtFilterTeam" [(ngModel)]=" filterEscribania">
             </div>
           </div>
@@ -64,7 +64,7 @@
                       <i class="fa fa-edit"></i>
                     </button>
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-danger" (click)="eliminarEscribania(item.id)">
+                    <button type="button" class="btn btn-danger" (click)="confirmarEliminar(item.id)">
                       <i class="fa fa-trash"></i>
                     </button>
                   </td>
@@ -101,9 +101,9 @@
                 <div class="modal-body">
                   <form #frmEscribania="ngForm">
                     <div class="form-group row">
-                      <label for="txtNombre" class="col-sm-3 col-form-label">nombre:</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" name="txtNombre" placeholder="Ingrese nombre" required
+                      <label for="txtNombre " class="col-sm-3 col-form-label">nombre:</label>
+                      <div class="col-sm-9 ">
+                        <input type="text" class="form-control texto " name="txtNombre" placeholder="Ingrese nombre" required
                           [(ngModel)]="escribania.nombre" #nombre="ngModel" maxlength="20">
                         <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)" class="alert alert-danger">
                           <div *ngIf="nombre.errors.required">
@@ -113,26 +113,11 @@
                         </div>
                       </div>
                     </div>
-                    <!-- <div class="form-group row">
-                      <label for="txtNombre" class="col-sm-3 col-form-label">nombre:</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" name="txtNombre" placeholder="Ingrese nombre" required
-                          [(ngModel)]="escribania.nombre" #nombre="ngModel">
-                        <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)" class="alert alert-danger">
-                          <div *ngIf="nombre.errors.required">
-                            nombre es requerido.
-                          </div>
-                        </div>
-                      </div>
-                    </div> -->
-
-
-
 
                     <div class="form-group row">
                       <label for="txtDireccion" class="col-sm-3 col-form-label">direccion:</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="Ingrese direccion" name="txtDireccion"
+                      <div class="col-sm-9 ">
+                        <input type="text" class="form-control texto" placeholder="Ingrese direccion" name="txtDireccion"
                           required [(ngModel)]="escribania.direccion" #direccion="ngModel">
                         <div *ngIf="direccion.invalid && (direccion.dirty || direccion.touched)"
                           class="alert alert-danger">
@@ -145,8 +130,8 @@
 
                     <div class="form-group row">
                       <label for="txtLocalidad" class="col-sm-3 col-form-label">Localidad:</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="Ingrese localidad" name="txtLocalidad"
+                      <div class="col-sm-9 ">
+                        <input type="text" class="form-control texto" placeholder="Ingrese localidad" name="txtLocalidad"
                           required [(ngModel)]="escribania.localidad" #localidad="ngModel">
                         <div *ngIf="localidad.invalid && (localidad.dirty || localidad.touched)"
                           class="alert alert-danger">
@@ -158,8 +143,8 @@
                     </div>
                     <div class="form-group row">
                       <label for="txtTelefono" class="col-sm-3 col-form-label">Telefono:</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="Ingrese telefono" name="txtTelefono"
+                      <div class="col-sm-9 ">
+                        <input type="text" class="form-control texto" placeholder="Ingrese telefono" name="txtTelefono"
                           [(ngModel)]="escribania.telefono" #telefono="ngModel" pattern="[3][8][0-9]*">
                         <div *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)"
                           class="alert alert-danger">
@@ -172,15 +157,7 @@
                         </div>
                       </div>
                     </div>
-                    <!--
-                    <div class="form-group row">
-                      <label for="txtTelefono" class="col-sm-3 col-form-label">Telefono:</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" placeholder="Ingrese telefono" name="txtTelefono"
-                          [(ngModel)]="escribania.telefono">
 
-                      </div>
-                    </div> -->
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">foto:</label>
                       <div class="col-sm-9">
@@ -189,26 +166,15 @@
                         <img *ngIf="escribania.foto" style="width: 100px; height: 100px" src="{{escribania.foto}}">
                       </div>
                     </div>
-                    <!--<div class="form-group row">
-                      <label for="cmbPerfil" class="col-sm-3 col-form-label">Perfil:</label>
-                      <div class="col-sm-9">
-                        <select class="form-control" name="cmbPerfil" required [(ngModel)]="escribania.perfil"
-                          #perfil="ngModel">
-                          <option *ngFor="let perfil of perfiles" [value]="perfil">{{perfil}}</option>
-                        </select>
-                        <div [hidden]="perfil.valid || perfil.untouched" class="alert alert-danger">
-                          Perfil es requerido.
-                        </div>
-                      </div>
-                    </div>-->
+
                   </form>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                  <button type="button" class="btn btn-outline-danger" data-dismiss="modal"
                     (click)="limpiar(frmEscribania)">Cancelar</button>
-                  <button type="button" *ngIf="isUpdate" [disabled]="!frmEscribania.form.valid" class="btn btn-primary"
+                  <button type="button" *ngIf="isUpdate" [disabled]="!frmEscribania.form.valid" class="btn btn-outline-info"
                     (click)="modificarEscribania(frmEscribania)">Actualizar</button>
-                  <button type="button" *ngIf="!isUpdate" [disabled]="!frmEscribania.form.valid" class="btn btn-primary"
+                  <button type="button" *ngIf="!isUpdate" [disabled]="!frmEscribania.form.valid" class="btn btn-outline-info"
                     (click)="agregarEscribania(frmEscribania)">Guardar</button>
                 </div>
               </div>
@@ -293,25 +259,18 @@
     <div *ngIf="!(loginService.usuarioLogueado.perfil===perfil.ADMINISTRATIVO)">
       <h5 class="title  text-xl-center">NOMINA DE ESCRIBANIAS </h5>
 
-      <div style="margin-top:25px;">
-        <agm-map *ngIf="lat != 0" [zoom]="15" [latitude]="lat" [longitude]="lng">
-          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-        </agm-map>
-      </div>
-
-
-      <div class="col-md-8 col-sm-8">
-        <input type="text" class="form-control" placeholder="Ingrese nombre de la escribania a buscar..."
+    
+      <div class="col-md-8 col-sm-8 mt-3">
+        <input type="text" class="form-control texto" placeholder="Ingrese nombre de la escribania a buscar..."
           name="txtFilterTeam" [(ngModel)]="filterEscribania">
 
       </div>
       <br>
       <div class="row card-columns">
-
-        <div class=" col-lg-6 mt-2 "
-          *ngFor="let item of escribanias | paginate: {itemsPerPage: 7, currentPage: p} | filter:filterEscribania">
-          <div class="card text-white ">
-            <img src="../../../assets/imagenes/nosotros/dos.jpg" class="card-img-top" width="150">
+        <div class="col-sm-12 col-md-6 col-lg-4 mt-2 "
+          *ngFor="let item of escribanias | paginate: {itemsPerPage: 7, currentPage: p} | filter:{nombre:filterEscribania}">
+          <div class="card text-white efecto ">
+            <img src="{{item.foto}}" class="card-img-top" width="150">
             <div class="card-header bg-primary  border-light " style="text-align: center">
               <h3 class="btn card-title">{{item.nombre}}</h3>
             </div>
@@ -323,8 +282,6 @@
             <div class="card-footer bg-primary  border-light">
               <button class="btn btn-outline-light fas fa-map-marker-alt" type="button"
                 (click)="verLonguitudLatitud(item)">Localizar en el mapa</button>
-
-
             </div>
           </div>
           <br>
@@ -334,6 +291,11 @@
       </div>
       <pagination-controls (pageChange)="p = $event"> </pagination-controls>
     </div>
+    <div style="margin-top:25px;">
+        <agm-map *ngIf="lat != 0" [zoom]="15" [latitude]="lat" [longitude]="lng">
+          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+        </agm-map>
+      </div>
   </div>
 
 </div>

@@ -12,6 +12,7 @@ import { EscribanoService } from 'src/app/services/escribano.service';
 import { Escribano } from 'src/app/models/escribano';
 import * as jsPDF from 'jspdf';
 import * as printJS from 'print-js';
+import Swal from 'sweetalert2';
 
 
 declare var jQuery: any;
@@ -121,17 +122,33 @@ export class EscribaniasComponent implements OnInit {
     return false;
   }
 
+  confirmarEliminar(id: number){
+    Swal.fire({
+      title: 'Desea Eliminar la Escribania?',
+      text: 'Se va a eliminar la escribania con ID: ' + id,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si',
+      cancelButtonText:'No'
+    }).then((result) => {
+      if (result.value) {
+        this.eliminarEscribania(id);
+      }
+    })
+  }
+
   public eliminarEscribania(id: number) {
     if (!this.validarEscribanos(id)) {
       this.escribaniaService.deleteEscribania(id).subscribe(
         result => {
-          console.log("borrado correctamente.")
-          //actualizo la tabla de escribanias
+          this.toastr.success("Escribania eliminada correctamente", "Eliminar Escribania");
           this.obtenerEscribanias()
           return true;
         },
         error => {
-          console.error("Error al borrar!");
+          this.toastr.error("Error al eliminar la escribania", "Eliminar Escribania");
           console.log(error);
           return false;
         }
@@ -185,11 +202,9 @@ export class EscribaniasComponent implements OnInit {
         }
 
       );
-
-
   }
-  asignarValor() {
 
+  asignarValor() {
     this.lat = this.lista[0].geometry.lat;
     this.lng = this.lista[0].geometry.lng;
     console.log("valores de lat y lng: " + this.lat + ", " + this.lng);
@@ -205,7 +220,8 @@ export class EscribaniasComponent implements OnInit {
     pdf.fromHTML(doc, 10, 30);
     pdf.save("Escribano.pdf");
   }
- print(){
-  printJS({printable: this.escrib, properties: ['id', 'nombre', 'direccion',  'localidad',  'telefono'], type: 'json'})
- }
+
+  print() {
+    printJS({ printable: this.escrib, properties: ['id', 'nombre', 'direccion', 'localidad', 'telefono'], type: 'json' })
+  }
 }

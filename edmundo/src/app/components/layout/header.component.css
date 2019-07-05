@@ -1,5 +1,4 @@
 
-
 .rowCabecera{
     padding-left: 10px;
     margin-right: auto;
@@ -29,19 +28,27 @@ header h2{
     color: grey;
     font-size: 20px;
 }
-.head{
-    background:#800000;
-}
 
+
+header nav{
+    background:#800000;   
+
+}
 
 header nav ul li a{
     color: #fff;
     padding: 20px;
-    display: block;
     text-decoration: none;
 }
-header nav ul li a:hover{
-   
+header nav ul li a:hover{   
     background: #a53838;
+    border-radius: 40px 10px;
 }
 
+.menuclass{
+    border: solid 3px;
+    color: black;
+    background: #5f2d2d;
+    text-decoration: none;
+    border-radius: 40px 10px;
+}

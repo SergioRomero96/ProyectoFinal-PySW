@@ -1,5 +1,5 @@
 <div class="container">
-     <!--PERDIL ADMINISTRATIVO-->
+    <!--PERDIL ADMINISTRATIVO-->
     <div class="mt-5" *ngIf="loginService.isLogueado">
 
         <div *ngIf="loginService.usuarioLogueado.perfil===perfil.ADMINISTRATIVO">
@@ -53,7 +53,8 @@
                                             <i class="fa fa-edit"></i>
                                         </button>
                                         <!-- Button trigger modal -->
-                                        <button type="button" class="btn btn-danger" (click)="eliminarPago(item.id)">
+                                        <button type="button" class="btn btn-danger"
+                                            (click)="confirmarEliminar(item.id)">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -88,13 +89,13 @@
                                 </div>
                                 <div class="modal-body">
                                     <form #frmPago="ngForm">
-                                        <!--<div class="form-group row">
+                                        <div class="form-group row">
                                             <label for="txtFecha" class="col-sm-3 col-form-label">Fecha Pago:</label>
                                             <div class="col-sm-9">
-                                            <input type="text" class="form-control" name="txtFecha" [value]="pago.fecha | date: 'dd/MM/yyyy'" [(ngModel)]="fechaActual">
-                                            <label>Fecha: {{pago.fecha}}</label>
+                                                <input type="text" class="form-control" name="txtFecha"
+                                                    [value]="pago.fecha | date: 'dd/MM/yyyy'" disabled>
                                             </div>
-                                        </div>-->
+                                        </div>
                                         <div class="form-group row">
                                             <label for="cmbEscribano" class="col-sm-3 col-form-label">Escribano:</label>
                                             <div class="col-sm-9">
@@ -112,16 +113,16 @@
                                         <div class="form-group row">
                                             <label for="txtImporte" class="col-sm-3 col-form-label">Importe:</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" name="txtImporte"
+                                                <input type="number" class="form-control" name="txtImporte"
                                                     placeholder="Ingrese el importe" required [(ngModel)]="pago.importe"
-                                                    #importe="ngModel" min="1" pattern="^[1-9]+">
+                                                    #importe="ngModel" valida-negativo>
                                                 <div *ngIf="importe.invalid && (importe.dirty || importe.touched)"
                                                     class="alert alert-danger">
                                                     <div *ngIf="importe.errors.required">
                                                         importe es requerido.
                                                     </div>
-                                                    <div *ngIf="importe.errors.pattern">
-                                                        No se pueden ingresar números negativos
+                                                    <div *ngIf="importe.errors.isNegativo">
+                                                        Importe No valido
                                                     </div>
                                                 </div>
                                             </div>
@@ -240,7 +241,7 @@
                                 <div class="card-body">
                                     <div class="form-group row">
                                         <div class="col-md-4 col-sm-4  mt-3">
-                                             <input type="text" class="form-control"
+                                            <input type="text" class="form-control"
                                                 placeholder="Ingrese Dia a buscar..." name="txtFilterFecha"
                                                 [(ngModel)]=" filtroFecha">
                                         </div>

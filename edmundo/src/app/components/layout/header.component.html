@@ -1,10 +1,6 @@
 <header>
   <img class="img-fluid" src="../../../assets/imagenes/logo2.jpg" alt="logo escribanos">
-  <div class="row head">
-    <div class="col-md-12">
-    </div>
-  </div>
-  <nav class="navbar navbar-expand-lg navbar-dark head">
+  <nav class="navbar navbar-expand-lg navbar-dark ">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -14,16 +10,15 @@
         <li class="nav-item active" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['inicio']">Inicio</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             Institucional
           </a>
-          <div class="dropdown-menu head" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item " [routerLink]="['nosotros']">Nosotros</a>
-            <a class="dropdown-item " [routerLink]="['historia']">Historia</a>
+          <div class="dropdown-menu menuclass" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" [routerLink]="['nosotros']">Nostros</a>
+            <a class="dropdown-item" [routerLink]="['historia']">Historia</a>
           </div>
-
         </li>
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['escribanias']">Escribanias</a>
@@ -39,7 +34,7 @@
             aria-haspopup="true" aria-expanded="false">
             Administración
           </a>
-          <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+          <div class="dropdown-menu menuclass" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" [routerLink]="['escribanos']">Escribanos</a>
             <a class="dropdown-item" [routerLink]="['novedades']">Novedades</a>
             <a class="dropdown-item" [routerLink]="['pagos']">Pagos</a>
@@ -48,9 +43,9 @@
         <li class="nav-item dropdown" *ngIf="loginService.usuarioLogueado.perfil===perfil.GERENTE">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-            Gerente
+            Administración
           </a>
-          <div class="dropdown-menu head" aria-labelledby="navbarDropdown">
+          <div class="dropdown-menu menuclass" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" [routerLink]="['escribanos']">Escribanos</a>
             <a class="dropdown-item" [routerLink]="['pagos']">Pagos</a>
           </div>
@@ -75,11 +70,14 @@
             <span class="mr-2">{{loginService.usuarioLogueado.userName}}</span>
             <img *ngIf="loginService.usuarioLogueado.foto" src="{{loginService.usuarioLogueado.foto}}" width="40"
               height="40" class="rounded-circle">
-            <img *ngIf="!loginService.usuarioLogueado.foto" src="../../../assets/imagenes/perfildefault.jpg" width="40"
+            <img *ngIf="!loginService.usuarioLogueado.foto" src="../../../assets/imagenes/perfil.jpeg" width="40"
               height="40" class="rounded-circle">
           </a>
-          <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="userDropdown">
-            <a class="dropdown-item head" [routerLink]="['login']" (click)="logout()">
+          <div class="dropdown-menu dropdown-menu-right shadow menuclass" aria-labelledby="userDropdown">
+            <a class="dropdown-item head" data-toggle="modal" data-target="#exampleModal">
+              <i class="fa fa-user"></i> Actualizar Perfil
+            </a>
+            <a class="dropdown-item" [routerLink]="['login']" (click)="logout()">
               <i class="fa fa-power-off"></i> Cerrar Sesion
             </a>
           </div>
@@ -87,4 +85,63 @@
       </ul>
     </div>
   </nav>
+
+  <!--MODAL-->
+  <div #exampleModal class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{{titulo}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #frmUsuario="ngForm">
+            <div class="form-group row">
+              <label for="txtUsuario" class="col-sm-3 col-form-label">UserName:</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="txtUsuario" placeholder="Ingrese userName" required
+                  [(ngModel)]="usuario.userName" #userName="ngModel" disabled>
+                <div *ngIf="userName.invalid && (userName.dirty || userName.touched)" class="alert alert-danger">
+                  <div *ngIf="userName.errors.required">
+                    UserName es requerido.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="txtPassword" class="col-sm-3 col-form-label">password:</label>
+              <div class="col-sm-9">
+                <input type="password" class="form-control" placeholder="Ingrese password" name="txtPassword" required
+                  [(ngModel)]="usuario.password" #password="ngModel">
+                <div *ngIf="password.invalid && (password.dirty || password.touched)" class="alert alert-danger">
+                  <div *ngIf="password.errors.required">
+                    Password es requerido.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label">foto Perfil:</label>
+              <div class="col-sm-9">
+                <input id="inputFoto" type="file" class="form-control-file" alife-file-to-base64
+                  (onFileChanged)="onFileChanges($event)" />
+                <img *ngIf="usuario.foto" style="width: 100px; height: 100px" src="{{usuario.foto}}">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"
+            (click)="limpiar(frmUsuario)">Cancelar</button>
+          <button type="button" [disabled]="!frmUsuario.form.valid" class="btn btn-primary"
+            (click)="modificarUsuario(frmUsuario)">Actualizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </header>

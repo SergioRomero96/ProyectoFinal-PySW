@@ -1,6 +1,7 @@
 import { MapaComponent } from './components/mapa/mapa.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+
 //AGREGADOS
 import { FormsModule } from '@angular/forms';
 import {DataTableModule} from 'angular-6-datatable';
@@ -45,6 +46,7 @@ import { Pag3Component } from './components/publico/pag3/pag3.component';
 import { HistoriaComponent } from './components/publico/historia/historia.component';
 import { Acad1Component } from './components/publico/acad1/acad1.component';
 import { Acad2Component } from './components/publico/acad2/acad2.component';
+//import {ValidateNegativo} from './validaciones.directive';
 
 @NgModule({
   declarations: [
@@ -72,7 +74,8 @@ import { Acad2Component } from './components/publico/acad2/acad2.component';
     Pag3Component,
     HistoriaComponent,
     Acad1Component,
-    Acad2Component
+    Acad2Component,
+    //ValidateNegativo
   ],
   imports: [
     BrowserModule,

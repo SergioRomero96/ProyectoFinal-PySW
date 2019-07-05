@@ -13,6 +13,18 @@ export class EscribanoService {
 
   constructor(private _http: HttpClient) { }
 
+  public getEscribanoByUsuario(usuario: Usuario): Observable<any> {
+    const httpOption = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }
+    let body = JSON.stringify(usuario);
+    console.log("usuario: " + body);
+    return this._http.post("http://localhost/colegioEscribanos/public/index.php/escribano/getEscribanoByUsuario",
+      body, httpOption);
+  }
+
   public getEscribanos(): Observable<any> {
     const httpOption = {
       headers: new HttpHeaders({

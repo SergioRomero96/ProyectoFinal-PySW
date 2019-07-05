@@ -10,6 +10,5 @@ export class Usuario {
         this.userName = userName;
         this.password = password;
         this.perfil = perfil;
-        this.foto = foto;
     }
 }

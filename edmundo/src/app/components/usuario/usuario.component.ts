@@ -5,6 +5,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { Constantes } from './../../models/constantes/constantes';
 import { FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 //import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
 
 
@@ -69,7 +70,6 @@ export class UsuarioComponent implements OnInit {
   }
 
   public agregarUsuario(form: FormGroup) {
-    //if (form.valid) {
     if (!this.validarUsuario()) {
       this.usuarioService.addUsuario(this.usuario)
         .subscribe(
@@ -89,11 +89,28 @@ export class UsuarioComponent implements OnInit {
     }
   }
 
+  confirmarEliminar(id: number){
+    Swal.fire({
+      title: 'Desea Eliminar al usuario?',
+      text: 'Se va a eliminar al usuario con ID: ' + id,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si',
+      cancelButtonText:'No'
+    }).then((result) => {
+      if (result.value) {
+        this.eliminarUsuario(id);
+      }
+    })
+  }
+
   public eliminarUsuario(id: number) {
+    console.log("eliminar id: "+ id);
     this.usuarioService.deleteUsuario(id).subscribe(
       result => {
         this.toastr.success("Se elimino correctamente", "Eliminar Usuario");
-        //actualizo la tabla de usuarios
         this.obtenerUsuarios()
         return true;
       },
@@ -122,7 +139,7 @@ export class UsuarioComponent implements OnInit {
         return true;
       },
       error => {
-        this.toastr.error("Erro al actualizar", this.titulo);
+        this.toastr.error("Error al actualizar", this.titulo);
         console.log(error);
         return false;
       }

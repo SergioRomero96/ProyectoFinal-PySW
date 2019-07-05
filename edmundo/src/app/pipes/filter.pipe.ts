@@ -20,25 +20,19 @@ export class FilterPipe implements PipeTransform {
   transform(items: any, filter: any, isAnd: boolean): any {
     if (filter && Array.isArray(items)) {
       const filterKeys = Object.keys(filter);
-      console.log('sip');
       if (isAnd) {
-        console.log('poco mas a dentro');
         return items.filter(item =>
           filterKeys.reduce((memo, keyName) =>
             (memo && new RegExp(filter[keyName], 'gi').test(item[keyName])) || filter[keyName] === '', true));
       } else {
-        console.log('mas a dentro');
         return items.filter(item => {
           return filterKeys.some((keyName) => {
             if (filter[keyName]) {
-              console.log('mas a dentrazo');
               const fil = filter[keyName].split(' ');
               let check = false;
               for (const f of fil) {
-                console.log('dentro del for');
                 if (new RegExp(f, 'gi').test(item[keyName]) || f === '') {
                   check = true;
-                  console.log('dentro del check')
                 } else {
                   check = false;
                   break;
@@ -46,7 +40,6 @@ export class FilterPipe implements PipeTransform {
               }
               return check;
             } else {
-              console.log('dentro del else');
               return true;
             }
           });

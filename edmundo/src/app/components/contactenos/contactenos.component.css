@@ -1,4 +1,8 @@
-
+.mapa{
+    border:solid 3px;
+    color: blue;  
+    border-radius: 2em;
+}
 
 .forma{
     border: solid 6px ;

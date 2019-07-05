@@ -1,4 +1,5 @@
 <div class="container ">
+  <!--PERFIL ADMINISTRATIVO-->
   <div class="mt-5" *ngIf="loginService.isLogueado">
     <div *ngIf="loginService.usuarioLogueado.perfil===perfil.ADMINISTRATIVO">
       <div class="card">
@@ -17,7 +18,7 @@
               </button>
             </div>
             <div class="col-md-6 col-sm-6  mt-3">
-              <input type="text" class="form-control" placeholder="Ingrese nombre del escribano a buscar..."
+              <input type="text" class="form-control texto" placeholder="Ingrese nombre del escribano a buscar..."
                 name="txtFilterEscribano" [(ngModel)]=" filterEscribano">
             </div>
           </div>
@@ -75,7 +76,7 @@
                       <i class="fa fa-edit"></i>
                     </button>
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-danger" (click)="eliminarEscribano(item)">
+                    <button type="button" class="btn btn-danger" (click)="confirmarEliminar(item)">
                       <i class="fa fa-trash"></i>
                     </button>
                   </td>
@@ -124,8 +125,8 @@
                             <div class="form-group row">
                               <label for="txtDni" class="col-sm-3 col-form-label">DNI:</label>
                               <div class="col-sm-9">
-                                <input type="text" class="form-control" name="txtDni" placeholder="Ingrese DNI" required
-                                  [(ngModel)]="escribano.dni" #dni="ngModel">
+                                <input type="text" class="form-control  texto" name="txtDni" placeholder="Ingrese DNI" maxlength="8"
+                                required [(ngModel)]="escribano.dni" #dni="ngModel" [disabled]="isUpdate">
                                 <div *ngIf="dni.invalid && (dni.dirty || dni.touched)" class="alert alert-danger">
                                   <div *ngIf="dni.errors.required">
                                     DNI es requerido.
@@ -136,7 +137,7 @@
                             <div class="form-group row">
                               <label for="txtApellido" class="col-sm-3 col-form-label">Apellido:</label>
                               <div class="col-sm-9">
-                                <input type="text" class="form-control" name="txtApellido"
+                                <input type="text" class="form-control  texto" name="txtApellido"
                                   placeholder="Ingrese Apellido" required [(ngModel)]="escribano.apellido"
                                   #apellido="ngModel">
                                 <div *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)"
@@ -150,7 +151,7 @@
                             <div class="form-group row">
                               <label for="txtNombre" class="col-sm-3 col-form-label">Nombre:</label>
                               <div class="col-sm-9">
-                                <input type="text" class="form-control" name="txtNombre" placeholder="Ingrese nombre"
+                                <input type="text" class="form-control  texto" name="txtNombre" placeholder="Ingrese nombre"
                                   required [(ngModel)]="escribano.nombre" #nombre="ngModel">
                                 <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
                                   class="alert alert-danger">
@@ -160,7 +161,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="form-group row">
+                           <!--<div class="form-group row">
                               <label for="txtFechaNac" class="col-sm-3 col-form-label">Fecha Nacimiento</label>
                               <div class="col-sm-9">
                                 <input type="date" class="form-control" name="txtFechaNac"
@@ -168,11 +169,11 @@
                                   [value]="escribano.fechaNacimiento" #fechaNac="ngModel">
 
                               </div>
-                            </div>
+                            </div>-->
                             <div class="form-group row">
                               <label for="txtDireccion" class="col-sm-3 col-form-label">Domicilio:</label>
                               <div class="col-sm-9">
-                                <input type="text" class="form-control" name="txtDireccion"
+                                <input type="text" class="form-control  texto" name="txtDireccion"
                                   placeholder="Ingrese Domicilio" [(ngModel)]="escribano.direccion"
                                   #direccion="ngModel">
 
@@ -195,9 +196,9 @@
                             <div class="form-group row">
                               <label for="txtMatricula" class="col-sm-3 col-form-label">Matricula:</label>
                               <div class="col-sm-9">
-                                <input type="text" class="form-control" name="txtMatricula"
+                                <input type="text" class="form-control  texto" name="txtMatricula"
                                   placeholder="Ingrese Matricula" required [(ngModel)]="escribano.matricula"
-                                  #matricula="ngModel">
+                                  #matricula="ngModel" [disabled]="isUpdate">
                                 <div *ngIf="matricula.invalid && (matricula.dirty || matricula.touched)"
                                   class="alert alert-danger">
                                   <div *ngIf="matricula.errors.required">
@@ -209,7 +210,7 @@
                             <div class="form-group row">
                               <label for="cmbCargo" class="col-sm-3 col-form-label">Cargo:</label>
                               <div class="col-sm-9">
-                                <select class="form-control" name="cmbCargo" required [(ngModel)]="escribano.cargo"
+                                <select class="form-control  texto" name="cmbCargo" required [(ngModel)]="escribano.cargo"
                                   #cargo="ngModel">
                                   <option *ngFor="let cargo of cargos" [value]="cargo">{{cargo}}</option>
                                 </select>
@@ -221,7 +222,7 @@
                             <div class="form-group row">
                               <label for="cmbEscribania" class="col-sm-3 col-form-label">Escribania:</label>
                               <div class="col-sm-9">
-                                <select class="form-control" name="cmbEscribania" required
+                                <select class="form-control  texto" name="cmbEscribania" required
                                   [(ngModel)]="escribano.escribania" #es="ngModel">
                                   <option *ngFor="let escribania of escribanias" [ngValue]="escribania">
                                     {{escribania.nombre}}</option>
@@ -234,7 +235,7 @@
                             <div class="form-group row" *ngIf="isUpdate">
                               <label for="cmbEstado" class="col-sm-3 col-form-label">Estado:</label>
                               <div class="col-sm-9">
-                                <select class="form-control" name="cmbEstado" required [(ngModel)]="escribano.estado"
+                                <select class="form-control  texto" name="cmbEstado" required [(ngModel)]="escribano.estado"
                                   #estado="ngModel">
                                   <option *ngFor="let estado of estados" [ngValue]="estado">
                                     {{estado}}</option>
@@ -259,9 +260,9 @@
                             <div class="form-group row">
                               <label for="txtUserName" class="col-sm-3 col-form-label">Nombre de Usuario:</label>
                               <div class="col-sm-9">
-                                <input type="text" class="form-control" name="txtUserName"
+                                <input type="text" class="form-control  texto" name="txtUserName"
                                   placeholder="Ingrese userName" required [(ngModel)]="escribano.usuario.userName"
-                                  #userName="ngModel">
+                                  #userName="ngModel" [disabled]="isUpdate">
                                 <div *ngIf="userName.invalid && (userName.dirty || userName.touched)"
                                   class="alert alert-danger">
                                   <div *ngIf="userName.errors.required">
@@ -273,7 +274,7 @@
                             <div class="form-group row">
                               <label for="txtPassword" class="col-sm-3 col-form-label">Contraseña:</label>
                               <div class="col-sm-9">
-                                <input type="password" class="form-control" placeholder="Ingrese password"
+                                <input type="password" class="form-control  texto" placeholder="Ingrese password"
                                   name="txtPassword" required [(ngModel)]="escribano.usuario.password"
                                   #password="ngModel">
                                 <div *ngIf="password.invalid && (password.dirty || password.touched)"
@@ -287,7 +288,7 @@
                             <div class="form-group row">
                               <label class="col-sm-3 col-form-label">foto Perfil:</label>
                               <div class="col-sm-9">
-                                <input id="inputFoto" class="form-control-file" type="file" alife-file-to-base64
+                                <input id="inputFoto" class="form-control-file " type="file" alife-file-to-base64
                                   (onFileChanged)="onFileChanges($event)" />
                                 <img *ngIf="escribano.usuario.foto" style="width: 100px; height: 100px"
                                   src="{{escribano.usuario.foto}}">
@@ -302,11 +303,11 @@
                   </form>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                  <button type="button" class="btn btn-outline-danger" data-dismiss="modal"
                     (click)="limpiar(frmEscribano)">Cancelar</button>
-                  <button type="button" *ngIf="isUpdate" [disabled]="!frmEscribano.form.valid" class="btn btn-primary"
+                  <button type="button" *ngIf="isUpdate" [disabled]="!frmEscribano.form.valid" class="btn btn-outline-primary"
                     (click)="modificarEscribano(frmEscribano)">Actualizar</button>
-                  <button type="button" *ngIf="!isUpdate" [disabled]="!frmEscribano.form.valid" class="btn btn-primary"
+                  <button type="button" *ngIf="!isUpdate" [disabled]="!frmEscribano.form.valid" class="btn btn-outline-primary"
                     (click)="agregarEscribano(frmEscribano)">Guardar</button>
                 </div>
               </div>

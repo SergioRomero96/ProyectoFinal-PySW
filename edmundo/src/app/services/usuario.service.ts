@@ -12,13 +12,22 @@ export class UsuarioService {
 
   constructor(private _http: HttpClient) { }
 
-  public getUsuarios(): Observable<any> {
+  public getUsuariosAll(): Observable<any> {
     const httpOption = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
     return this._http.get("http://localhost/colegioEscribanos/public/index.php/usuario/", httpOption);
+  }
+
+  public getUsuarios(): Observable<any> {
+    const httpOption = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this._http.get("http://localhost/colegioEscribanos/public/index.php/usuario/usuarios", httpOption);
   }
 
   public addUsuario(usuario: Usuario) {
